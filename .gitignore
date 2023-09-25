@@ -1,0 +1,30 @@
+# Ignore everything
+/*
+
+# But not these files
+
+#src
+!/env
+!/src
+!/src-ssr
+!.env-example
+!/dist
+
+#other fields
+!/.gitignore
+!/package.json
+!/quasar.conf.js
+!/tailwind.config.js
+!/tsconfig.json
+!/.eslintrc.js
+!/README.md
+!/.babelrc
+!/.postcssrc.js
+!/babel.config.js
+!/azure-static-web-apps-brave-forest-074656b0f.yml
+!/.gitmodules
+
+#node_modules
+!/node_modules
+/node_modules/*
+!/node_modules/@imagina
