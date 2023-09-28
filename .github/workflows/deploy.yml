@@ -17,8 +17,6 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: "14"
-
-      # Paso para restaurar la caché de node_modules si está disponible
       - name: Restore Cache
         uses: actions/cache@v2
         with:
@@ -30,11 +28,9 @@ jobs:
       - name: Install Quasar CLI
         run: npm install -g @quasar/cli
 
-      # Paso para ejecutar npm install con caché
       - name: Install dependencies
         run: npm install
 
-      # Paso para almacenar en caché node_modules para usos futuros
       - name: Cache node_modules
         uses: actions/cache@v2
         with:
@@ -58,18 +54,3 @@ jobs:
 
       - name: Remove agione folder qsetupagione
         run: rm -rf src/modules/qsetupagione
-
-      - name: Initialize submodules
-        run: git submodule update --init --remote
-
-      - name: Up to date branch
-        run: |
-          git config user.name 'wilmerace'
-          git config user.email 'wilmerc@imaginacolombia.com'
-          git fetch --unshallow
-          git pull
-          git submodule foreach --recursive git checkout
-          git submodule foreach --recursive git pull
-
-      - name: Build
-        run: quasar build -m pwa
