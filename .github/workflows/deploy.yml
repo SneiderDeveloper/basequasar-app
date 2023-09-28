@@ -1,9 +1,9 @@
 name: Deploy agione
 
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    types:
+      - closed
 
 jobs:
   build-and-deploy:
@@ -54,3 +54,18 @@ jobs:
 
       - name: Remove agione folder qsetupagione
         run: rm -rf src/modules/qsetupagione
+
+      - name: Initialize submodules
+        run: git submodule update --init --remote
+
+      - name: Up to date branch
+        run: |
+          git config user.name 'wilmerace'
+          git config user.email 'wilmerc@imaginacolombia.com'
+          git fetch --unshallow
+          git pull
+          git submodule foreach --recursive git checkout
+          git submodule foreach --recursive git pull
+
+      - name: Build
+        run: quasar build -m pwa
