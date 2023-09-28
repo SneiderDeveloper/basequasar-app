@@ -1,35 +1,50 @@
 name: Deploy agione
- 
-on: 
+
+on:
   push:
     branches:
-     - main  
- 
+      - main
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
- 
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
- 
+
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14'
- 
+          node-version: "14"
+
       - name: Install Quasar CLI
         run: npm install -g @quasar/cli
- 
+
       - name: Install dependencies
         run: npm install
- 
+
       - name: Remove @imagina folder
         run: rm -rf node_modules/@imagina
- 
+
+      - name: Remove agione folder qcargoagione
+        run: rm -rf src/modules/qcargoagione
+
+      - name: Remove agione folder qdhlagione
+        run: rm -rf src/modules/qdhlagione
+
+      - name: Remove agione folder qfly
+        run: rm -rf src/modules/qfly
+
+      - name: Remove agione folder qramp
+        run: rm -rf src/modules/qramp
+
+      - name: Remove agione folder qsetupagione
+        run: rm -rf src/modules/qsetupagione
+        
       - name: Initialize submodules
         run: git submodule update --init --remote
- 
+
       - name: Up to date branch
         run: |
           git config --global user.name 'Imagina'
@@ -38,6 +53,6 @@ jobs:
           git pull
           git submodule foreach --recursive git checkout
           git submodule foreach --recursive git pull
- 
+
       - name: Build
         run: quasar build -m pwa
