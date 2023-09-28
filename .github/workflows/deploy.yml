@@ -41,14 +41,14 @@ jobs:
 
       - name: Remove agione folder qsetupagione
         run: rm -rf src/modules/qsetupagione
-        
+
       - name: Initialize submodules
-        run: git submodule update --init --remote
+        run: git submodule update --init --recursive
 
       - name: Up to date branch
         run: |
-          git config --global user.name 'Imagina'
-          git config --global user.email 'wilmerc@imaginacolombia.com'
+          git config user.name 'wilmerace'
+          git config user.email 'wilmerc@imaginacolombia.com'
           git fetch --unshallow
           git pull
           git submodule foreach --recursive git checkout
