@@ -6,8 +6,8 @@ export default {
   //git submodule foreach --recursive git merge dev
   //baseUrl: 'https://localhost:7116',//Define base url
   //baseUrl: 'https://app-agione-stag-use2-01.azurewebsites.net',//Define base url
-  //baseUrl: 'https://agionedev.azurewebsites.net',//Define base url
-  baseUrl: 'https://app-agione-prod-use2-01.azurewebsites.net',//Define base url
+  baseUrl: 'https://agionedev.azurewebsites.net',//Define base url
+  //baseUrl: 'https://app-agione-prod-use2-01.azurewebsites.net',//Define base url
   modules: [
     'qcrud',
     'qblog',
