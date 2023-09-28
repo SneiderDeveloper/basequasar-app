@@ -13,6 +13,7 @@
 #other fields
 !/.gitignore
 !/package.json
+!/package-lock.json
 !/quasar.conf.js
 !/tailwind.config.js
 !/tsconfig.json
