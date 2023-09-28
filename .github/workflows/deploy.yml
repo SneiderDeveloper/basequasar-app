@@ -18,11 +18,28 @@ jobs:
         with:
           node-version: "14"
 
+      # Paso para restaurar la caché de node_modules si está disponible
+      - name: Restore Cache
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
       - name: Install Quasar CLI
         run: npm install -g @quasar/cli
 
+      # Paso para ejecutar npm install con caché
       - name: Install dependencies
         run: npm install
+
+      # Paso para almacenar en caché node_modules para usos futuros
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
 
       - name: Remove @imagina folder
         run: rm -rf node_modules/@imagina
@@ -41,9 +58,6 @@ jobs:
 
       - name: Remove agione folder qsetupagione
         run: rm -rf src/modules/qsetupagione
-
-      - name: Initialize submodules
-        run: git submodule update --init --recursive
 
       - name: Up to date branch
         run: |
