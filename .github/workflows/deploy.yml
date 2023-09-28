@@ -1,0 +1,40 @@
+name: Deploy agione
+ 
+on: workflow_dispatch
+ 
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+ 
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+ 
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+ 
+      - name: Install Quasar CLI
+        run: npm install -g @quasar/cli
+ 
+      - name: Install dependencies
+        run: npm install
+ 
+      - name: Remove @imagina folder
+        run: rm -rf node_modules/@imagina
+ 
+      - name: Initialize submodules
+        run: git submodule update --init --remote
+ 
+      - name: Up to date branch
+        run: |
+          git config --global user.name 'Imagina'
+          git config --global user.email 'wilmerc@imaginacolombia.com'
+          git fetch --unshallow
+          git pull
+          git submodule foreach --recursive git checkout
+          git submodule foreach --recursive git pull
+ 
+      - name: Build
+        run: quasar build -m pwa
