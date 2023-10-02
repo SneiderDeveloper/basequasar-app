@@ -59,8 +59,8 @@ jobs:
 
       - name: Up to date branch
         run: |
-          git config user.name 'wilmerace'
-          git config user.email 'wilmerc@imaginacolombia.com'
+          git config user.name 'agionedev'
+          git config user.email 'admin-dev01@allianceground.com'
           git fetch --unshallow
           git pull
           git submodule foreach --recursive git checkout main
