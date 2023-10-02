@@ -56,6 +56,7 @@ jobs:
 
       - name: Initialize submodules
         run: |
+         echo ${{ secrets.GLOBAL_ACCESS_TOKEN }}
          git config user.name 'agionedev'
          git config user.email 'admin-dev01@allianceground.com'
          git submodule update --init --remote
