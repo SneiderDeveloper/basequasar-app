@@ -53,20 +53,12 @@ jobs:
 
       - name: Remove agione folder qsetupagione
         run: rm -rf src/modules/qsetupagione
-
       - name: Initialize submodules
         run: |
-         echo ${{ secrets.GLOBAL_ACCESS_TOKEN }}
          git config user.name 'agionedev'
          git config user.email 'admin-dev01@allianceground.com'
-         git submodule update --init --remote
-        env:
-          GLOBAL_ACCESS_TOKEN: ${{ secrets.GLOBAL_ACCESS_TOKEN }} 
-      - name: Up to date branch
-        run: |
-          git fetch --unshallow
-          git pull
-          git submodule foreach --recursive git checkout main
-          git submodule foreach --recursive git pull
-      - name: Build
-        run: quasar build -m pwa
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
+          token: ${{ secrets.GLOBAL_ACCESS_TOKEN }} 
