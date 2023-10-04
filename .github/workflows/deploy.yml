@@ -1,24 +1,27 @@
 name: Deploy agione
 
-on: 
-  push:
-    branches:
-     - main
+on: workflow_dispatch
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          submodules: 'recursive'
           token: ${{ secrets.GLOBAL_ACCESS_TOKEN }}
+          fetch-depth: "0"
+
+      - name: Set up Git credentials
+        run: |
+          git config --global credential.helper store
+          git config --global user.password ${{ secrets.GLOBAL_ACCESS_TOKEN }}
+          git config --global url.https://${{ secrets.GLOBAL_ACCESS_TOKEN }}@github.com/.insteadOf https://github.com/
+        shell: bash
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14"
+          node-version: "12"
       - name: Restore Cache
         uses: actions/cache@v2
         with:
@@ -26,46 +29,45 @@ jobs:
           key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             node-modules-${{ runner.os }}-
-
       - name: Install Quasar CLI
-        run: npm install -g @quasar/cli
+        run: |
+          npm cache clean --force
+          npm install -g @quasar/cli@1.3.2
 
       - name: Install dependencies
-        run: npm install
-
+        run: |
+          npm install
       - name: Cache node_modules
         uses: actions/cache@v2
         with:
           path: node_modules
           key: node-modules-${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-
-      - name: Remove @imagina folder
-        run: rm -rf node_modules/@imagina
-
-      - name: Remove agione folder qcargoagione
-        run: rm -rf src/modules/qcargoagione
-
-      - name: Remove agione folder qdhlagione
-        run: rm -rf src/modules/qdhlagione
-
-      - name: Remove agione folder qfly
-        run: rm -rf src/modules/qfly
-
-      - name: Remove agione folder qramp
-        run: rm -rf src/modules/qramp
-
-      - name: Remove agione folder qsetupagione
-        run: rm -rf src/modules/qsetupagione
-      - name: Initialize submodules
-        run: |
-         git config user.name 'agionedev'
-         git config user.email 'admin-dev01@allianceground.com'
-      - name: Up to date branch
+      - name: Initialize and update submodules
         run: |
           git submodule update --init --remote
-          git fetch --unshallow
-          git pull
-          git submodule foreach --recursive git checkout main
-          git submodule foreach --recursive git pull
-      - name: Build
+          git submodule foreach --recursive git fetch
+          git submodule foreach --recursive git checkout staging
+          git -C node_modules/@imagina/qcrud checkout offline
+          git -C node_modules/@imagina/qnotification checkout firebase_v2
+          git -C node_modules/@imagina/qsite checkout offline
+          git -C node_modules/@imagina/quser checkout offline
+          git -C node_modules/@imagina/qoffline checkout offline
+      - name: Build Agione
         run: quasar build -m pwa
+      - name: Upload artifact agione
+        uses: actions/upload-artifact@v2
+        with:
+          name: agione-app
+          path: dist/pwa
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v2
+        with:
+          name: agione-app
+      - name: deploy angione azure
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_DEPLOY_TOKEN_MAIN }}
+          action: "upload"
+          app_location: "dist/pwa" # App source code path
+          api_location: "" # Api source code path - optional
+          output_location: "dist" # Built app content directory - optional
