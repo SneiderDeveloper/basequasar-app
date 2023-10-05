@@ -54,15 +54,6 @@ jobs:
           git -C node_modules/@imagina/qoffline checkout offline
       - name: Build Agione
         run: quasar build -m pwa
-      - name: Upload artifact agione
-        uses: actions/upload-artifact@v2
-        with:
-          name: agione-app
-          path: dist/pwa
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v2
-        with:
-          name: agione-app
       - name: deploy angione azure
         uses: Azure/static-web-apps-deploy@v1
         with:
