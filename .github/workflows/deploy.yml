@@ -48,7 +48,8 @@ jobs:
           azure_static_web_apps_api_token: ${{ 
             github.ref == 'refs/heads/main' && secrets.AZURE_DEPLOY_TOKEN_MAIN || 
             github.ref == 'refs/heads/staging' && secrets.AZURE_DEPLOY_TOKEN_STAGING ||
-            github.ref == 'refs/heads/dev' && secrets.AZURE_DEPLOY_TOKEN_DEV}}
+            github.ref == 'refs/heads/dev' && secrets.AZURE_DEPLOY_TOKEN_DEV || 
+            github.ref == 'refs/heads/localhost' && secrets.AZURE_DEPLOY_TOKEN_LOCAL}}
           action: "upload"
           app_location: "dist/pwa" # App source code path
           api_location: "" # Api source code path - optional
