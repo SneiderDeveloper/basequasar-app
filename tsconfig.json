@@ -8,7 +8,8 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "allowJs": true
+    "allowJs": true,
+    "types" : ["googlemaps"]
   },
   "include": [
     "src/**/*.ts", 
