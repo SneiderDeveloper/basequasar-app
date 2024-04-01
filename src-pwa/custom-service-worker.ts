@@ -12,11 +12,18 @@ declare const self: ServiceWorkerGlobalScope &
 
 import { precacheAndRoute } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
-import { CacheFirst } from 'workbox-strategies'
+import { StaleWhileRevalidate } from 'workbox-strategies'
 import { Queue, QueueStore } from 'workbox-background-sync'
 
 // Use with precache injection
-precacheAndRoute(self.__WB_MANIFEST)
+const wbManifest = [ ...self.__WB_MANIFEST ]
+
+// filtering resources to cache
+const assets = wbManifest.filter((asset: { url: string, revision: string }) => {
+  return asset.url.includes('src_modules');
+});
+
+precacheAndRoute(assets)
 
 const requestPOST = new Map<string, Request>()
 const sentPOST = new Map<string, any>()
@@ -24,7 +31,7 @@ const QUEUE_NAME = 'requests'
 
 registerRoute(
   ({ url }) => url.pathname.startsWith('/api/'),
-  new CacheFirst(),
+  new StaleWhileRevalidate(),
 )
 
 const postMessage = (message: string) => {
