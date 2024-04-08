@@ -50,7 +50,8 @@
     "vue-router": "^4.0.12",
     "vue-signature-pad": "^3.0.2",
     "vuedraggable": "^4.1.0",
-    "vuex": "^4.0.1"
+    "vuex": "^4.0.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@quasar/app-webpack": "^3.9.2",
