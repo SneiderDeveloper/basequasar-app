@@ -13,6 +13,8 @@
 const { configure } = require('quasar/wrappers');
 const path = require('node:path');
 const webpack = require('webpack');
+const CompressionPlugin = require('compression-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = configure(function(ctx) {
   return {
@@ -65,27 +67,49 @@ module.exports = configure(function(ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
-      extendWebpack(cfg) {
-        //Alias
-        cfg.resolve.alias = {
-          ...cfg.resolve.alias,
+      extendWebpack(config) {
+        if (!config.optimization) {
+          config.optimization = {};
+        }
+
+        if (!config.optimization.minimizer) {
+          config.optimization.minimizer = [];
+        }
+        // Alias
+        config.resolve.alias = {
+          ...config.resolve.alias,
           'modules': path.resolve(__dirname, './src/modules'),
           '@imagina': path.resolve(__dirname, './src/modules')
         };
         //Plugins
-        cfg.plugins.push(
+        config.plugins.push(
           new webpack.ProvidePlugin({
             config: [path.resolve(__dirname, './src/setup/plugin'), 'default']
           })
         );
+
+        // compress files
+        config.plugins.push(
+          new CompressionPlugin({
+            filename: '[path][base].gz',
+            algorithm: 'gzip',
+            test: /\.(js|css|html|svg)$/,
+            threshold: 10240, // 10 KB
+            minRatio: 0.8
+          })
+        );
+
+        // Minify JavaScript code
+        config.optimization.minimizer.push(
+          new TerserPlugin({
+            terserOptions: {
+              compress: {
+                drop_console: true // delete console.log in production
+              }
+            }
+          })
+        );
       },
-      vueCompiler: true,
-      vueLoaderOptions: {
-        // Options for vue-template-compiler
-        compilerOptions: {
-          isCustomElement: tag => tag.startsWith('vue-advanced-chat')
-        }
-      }
       // transpile: false,
       // publicPath: '/',
 
