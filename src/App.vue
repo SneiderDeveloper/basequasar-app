@@ -25,7 +25,7 @@ export default defineComponent({
             label: 'Ok',
             icon: '',
             color: 'white',
-            handler: () => window.location.reload(true)
+            handler: () => window.location.reload()
           }
         ]
       });
