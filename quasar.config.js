@@ -68,6 +68,13 @@ module.exports = configure(function(ctx) {
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
       extendWebpack(config) {
+        if (!config.optimization) {
+          config.optimization = {};
+        }
+
+        if (!config.optimization.minimizer) {
+          config.optimization.minimizer = [];
+        }
         // Alias
         config.resolve.alias = {
           ...config.resolve.alias,
