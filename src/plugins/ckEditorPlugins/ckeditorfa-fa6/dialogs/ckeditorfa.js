@@ -177,7 +177,7 @@ class PluginFaModal {
   					children:[
   						{
   							type:'button',
-  							className:'ckeditor-fa-solid',
+  							className:'ckeditor-fa-select',
   							label:'Solid',
   							onClick:function(){
   								if(selectedStyle != SOLID){
@@ -188,7 +188,7 @@ class PluginFaModal {
   						},
   						{
   							type:'button',
-  							className:'faSelect',
+  							className:'ckeditor-fa-select',
   							label:'Regular',
   							onClick:function(){
   								if(selectedStyle != REGULAR){
@@ -199,7 +199,7 @@ class PluginFaModal {
   						},
   						{
   							type:'button',
-  							className:'faSelect',
+  							className:'ckeditor-fa-select',
   							label:'Light',
   							onClick:function(){
   								if(selectedStyle != LIGHT){
@@ -210,7 +210,7 @@ class PluginFaModal {
   						},
   						{
   							type:'button',
-  							className:'faSelect',
+  							className:'ckeditor-fa-select',
   							label:'Thin',
   							onClick:function(){
   								if(selectedStyle != THIN){
@@ -221,7 +221,7 @@ class PluginFaModal {
   						},
   						{
   							type:'button',
-  							className:'faSelect',
+  							className:'ckeditor-fa-select',
   							label:'Duotone',
   							onClick:function(){
   								if(selectedStyle != DUOTONE){
@@ -232,7 +232,7 @@ class PluginFaModal {
   						},
   						{
   							type:'button',
-  							className:'faSelect',
+  							className:'ckeditor-fa-select',
   							label:'Brands',
   							style:'margin-top: 0px !important',
   							onClick:function(){
