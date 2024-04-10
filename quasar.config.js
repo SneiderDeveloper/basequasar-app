@@ -88,25 +88,33 @@ module.exports = configure(function(ctx) {
           })
         );
 
-        // compress files
-        config.plugins.push(
-          new CompressionPlugin({
-            filename: '[path][base].gz',
-            algorithm: 'gzip',
-            test: /\.(js|css|html|svg)$/,
-            threshold: 10240, // 10 KB
-            minRatio: 0.8
-          })
-        );
-
         // Minify JavaScript code
         config.optimization.minimizer.push(
           new TerserPlugin({
             terserOptions: {
               compress: {
-                drop_console: true // delete console.log in production
+                drop_console: true, // delete console.log in production
+                passes: 3
               }
             }
+          })
+        );
+
+        // compress files
+        config.plugins.push(
+          new CompressionPlugin({
+            filename: '[path][base].br', // Usar extensión .br para Brotli
+            algorithm: 'brotliCompress', // Utilizar Brotli para comprimir
+            test: /\.(js|.ts|css|html|svg)$/,
+            threshold: 10240, // Comprimir archivos mayores a 10 KB
+            minRatio: 0.8 // Comprimir si el resultado es al menos 80% más pequeño
+          }),
+          new CompressionPlugin({
+            filename: '[path][base].gz', // Usar extensión .gz para Gzip
+            algorithm: 'gzip', // Utilizar Gzip para comprimir
+            test: /\.(js|.ts|css|html|svg)$/,
+            threshold: 10240, // Comprimir archivos mayores a 10 KB
+            minRatio: 0.8 // Comprimir si el resultado es al menos 80% más pequeño
           })
         );
       },
@@ -129,7 +137,20 @@ module.exports = configure(function(ctx) {
 
       // https://v2.quasar.dev/quasar-cli-webpack/handling-webpack
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
-      // chainWebpack (/* chain */) {}
+      chainWebpack(config) {
+        config.optimization.splitChunks({
+          chunks: 'all',
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendor',
+              chunks: 'initial',
+              priority: 10,
+              enforce: true,
+            },
+          },
+        });
+      },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-devServer
@@ -203,7 +224,9 @@ module.exports = configure(function(ctx) {
     // https://v2.quasar.dev/quasar-cli-webpack/developing-pwa/configuring-pwa
     pwa: {
       workboxPluginMode: 'InjectManifest', // 'GenerateSW' or 'InjectManifest'
-      workboxOptions: {}, // only for GenerateSW
+      workboxOptions: {
+        maximumFileSizeToCacheInBytes: 7000000
+      }, // only for GenerateSW
 
       // for the custom service worker ONLY (/src-pwa/custom-service-worker.[js|ts])
       // if using workbox in InjectManifest mode
