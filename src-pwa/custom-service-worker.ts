@@ -10,14 +10,14 @@ self.__WB_DISABLE_DEV_LOGS = true;
 declare const self: ServiceWorkerGlobalScope &
   typeof globalThis & { skipWaiting: () => void }
 
-import { precacheAndRoute } from 'workbox-precaching'
-import { registerRoute } from 'workbox-routing'
-import { ExpirationPlugin } from 'workbox-expiration'
-import { StaleWhileRevalidate, NetworkFirst, CacheFirst, NetworkOnly } from 'workbox-strategies'
-import { Queue, QueueStore } from 'workbox-background-sync'
+import {precacheAndRoute} from 'workbox-precaching'
+import {registerRoute} from 'workbox-routing'
+import {ExpirationPlugin} from 'workbox-expiration'
+import {NetworkFirst, CacheFirst} from 'workbox-strategies'
+import {Queue, QueueStore} from 'workbox-background-sync'
 
 // Use with precache injection
-const wbManifest = [ ...self.__WB_MANIFEST ]
+const wbManifest = [...self.__WB_MANIFEST]
 
 // filtering resources to cache
 const assets = wbManifest.filter((asset: { url: string, revision: string }) => {
@@ -33,8 +33,7 @@ const QUEUE_NAME = 'requests'
 registerRoute((request) => {
   const url = new URL(request.request.url)
   const isApi = url.pathname.startsWith('/api/')
-  const isRefresh = request.request.headers.get('x-refresh')
-
+  const isRefresh = Boolean(request.request.headers.get('x-refresh'))
   return isApi && isRefresh
 
 }, new NetworkFirst({
@@ -53,7 +52,7 @@ registerRoute((request) => {
   const isRefresh = request.request.headers.get('x-refresh')
 
   return isApi && !isRefresh
-}, new StaleWhileRevalidate({
+}, new CacheFirst({
   cacheName: 'stale-while-revalidate',
   plugins: [
     new ExpirationPlugin({
@@ -76,7 +75,7 @@ const decode = (data: ArrayBuffer) => {
   try {
     const decoder = new TextDecoder('utf-8')
     const body = decoder.decode(data)
-    
+
     if (!body) return ''
     return JSON.parse(body)
   } catch (error) {
@@ -91,7 +90,7 @@ const transformReadableStreamToObject = async (data: ReadableStream): Promise<an
     const reader = data.getReader()
     let result = '';
     while (true) {
-      const { done, value } = await reader.read()
+      const {done, value} = await reader.read()
       if (done) break;
       result += new TextDecoder().decode(value)
     }
@@ -112,11 +111,11 @@ const getIdFromUrl = (fullUrl: string) => {
 const groupRequestsById = (entries) => {
   return entries.reduce((acc, request) => {
     if (request.requestData.method !== 'PUT') return acc
-    
+
     const id = getIdFromUrl(request.requestData?.url)
-  
+
     acc[id] ? acc[id].push(request) : acc[id] = [request]
-    
+
     return acc
   }, {})
 }
@@ -131,19 +130,19 @@ const squashRequests = async () => {
   try {
     await Promise.all(Object.keys(groupedUpdateRequests).map(async key => {
       const group = groupedUpdateRequests[key]
-  
+
       if (group.length > 1) {
         let body = null
-  
-        await Promise.all(group.map(async (item: any  ) => {
+
+        await Promise.all(group.map(async (item: any) => {
           const bodyArrayBuffer = item.requestData.body
 
-          const { 
-            attributes: attributesPUT 
+          const {
+            attributes: attributesPUT
           } = decode(bodyArrayBuffer)
-  
+
           await queueStore.deleteEntry(item.id)
-  
+
           body = {
             attributes: {
               ...body?.attributes,
@@ -153,16 +152,16 @@ const squashRequests = async () => {
         }))
 
         const requestData = group[0].requestData
-  
+
         const mergeRequest = new Request(requestData?.url, {
           ...requestData,
           body: JSON.stringify(body),
         })
-  
+
         await queue.pushRequest({
           request: mergeRequest
         })
-        
+
       }
     }))
   } catch (error) {
@@ -174,9 +173,9 @@ const squashRequests = async () => {
 const mergePostAndPutRequests = async (entry, entries) => {
   try {
     let body = null
-    const { 
-      attributes: { offline_id }, 
-      attributes: attributesPOST 
+    const {
+      attributes: {offline_id},
+      attributes: attributesPOST
     } = await transformReadableStreamToObject(entry.body)
 
     await Promise.all(entries.map(async (request: any) => {
@@ -187,8 +186,8 @@ const mergePostAndPutRequests = async (entry, entries) => {
       if (String(id) === String(offline_id)) {
         const bodyArrayBuffer = request.requestData.body
 
-        const { 
-          attributes: attributesPUT 
+        const {
+          attributes: attributesPUT
         } = await decode(bodyArrayBuffer)
 
         delete attributesPUT.id
@@ -243,24 +242,24 @@ const replaceRequestUrlWithStoredUrl = async (entry) => {
     })
 
     return newRequest
-  } 
+  }
 }
 
 const queue = new Queue(QUEUE_NAME, {
-  onSync: async ({ queue }) => {
+  onSync: async ({queue}) => {
     let entry
     const retryCounters = new Map<string, number>()
-    
+
     // Group PUT requests to then send a single PUT request.
     await squashRequests()
-    
+
     const entries = await queueStore.getAll()
 
     while (entry = await queue.shiftRequest()) {
       try {
         if (entry.request.method === 'POST') {
-          // If from the same POST request there are PUT requests, 
-          // then it takes the corresponding PUT requests and merges 
+          // If from the same POST request there are PUT requests,
+          // then it takes the corresponding PUT requests and merges
           // them. Then it sends a single POST request.
           const mergeRequest = await mergePostAndPutRequests(entry.request.clone(), entries)
           if (mergeRequest) {
@@ -269,9 +268,9 @@ const queue = new Queue(QUEUE_NAME, {
         }
 
         if (entry.request.method === 'DELETE') {
-          // If a POST request is successful and then that same record 
-          // is deleted during the disconnected state, then the fake ID 
-          // contained in the URL is replaced by the real ID generated 
+          // If a POST request is successful and then that same record
+          // is deleted during the disconnected state, then the fake ID
+          // contained in the URL is replaced by the real ID generated
           // by the database as a response to the successful request.
           const newRequest = await replaceRequestUrlWithStoredUrl(entry)
           if (newRequest) {
@@ -284,9 +283,9 @@ const queue = new Queue(QUEUE_NAME, {
         console.log('response', response)
 
         if (entry.request.method === 'POST') {
-          const { data } = await response.json()
-          // Save the ID generated by the server 
-          // to later use it in the URL of the DELETE 
+          const {data} = await response.json()
+          // Save the ID generated by the server
+          // to later use it in the URL of the DELETE
           // request corresponding to the created record.
           sentPOST.set(data.offlineId, data.id)
         }
@@ -295,7 +294,7 @@ const queue = new Queue(QUEUE_NAME, {
 
         retryCounters.delete(entry.request.url)
       } catch (error) {
-        // If a queued request fails, it will try two more times, 
+        // If a queued request fails, it will try two more times,
         // and if unsuccessful, it will remove it from the queue.
         const retryCounter = retryCounters.get(entry.request.url) || 0
 
@@ -319,9 +318,7 @@ self.addEventListener('fetch', (event) => {
     'DELETE',
   ]
 
-  if (!supportedMethods.includes(event.request.method)) {
-    return
-  }
+  if (!supportedMethods.includes(event.request.method)) return;
 
   const bgSyncLogic = async () => {
     try {
@@ -329,13 +326,13 @@ self.addEventListener('fetch', (event) => {
       return response
     } catch (error) {
       const path = new URL(event.request.url).pathname
-      if(path.startsWith('/api/') && !navigator.onLine) {
+      if (path.startsWith('/api/') && !navigator.onLine) {
 
         let requestId = null
 
         if (event.request.method === 'POST') {
-          const { 
-            attributes: { offline_id } 
+          const {
+            attributes: {offline_id}
           } = await transformReadableStreamToObject(event.request.clone().body)
           requestPOST.set(String(offline_id), event.request.clone())
         }
@@ -357,7 +354,7 @@ self.addEventListener('fetch', (event) => {
 
         postMessage('queue-request')
       }
-      
+
       return error
     }
   }
