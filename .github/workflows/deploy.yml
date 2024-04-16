@@ -21,11 +21,11 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "12"
+          node-version: "20"
       - name: Install Quasar CLI
         run: |
          npm cache clean --force
-         npm install -g @quasar/cli@1
+         npm install -g @quasar/cli
 
       - name: Install dependencies
         run: |
@@ -34,12 +34,7 @@ jobs:
         run: |
           git submodule update --init --remote
           git submodule foreach --recursive git fetch
-          git submodule foreach --recursive git checkout staging
-          git -C node_modules/@imagina/qcrud checkout offline
-          git -C node_modules/@imagina/qnotification checkout firebase_v2
-          git -C node_modules/@imagina/qsite checkout offline
-          git -C node_modules/@imagina/quser checkout offline
-          git -C node_modules/@imagina/qoffline checkout offline
+          git submodule foreach --recursive git checkout quasarV2
       - name: Build Agione
         run: quasar build -m pwa
       - name: deploy angione azure
@@ -48,7 +43,8 @@ jobs:
           azure_static_web_apps_api_token: ${{ 
             github.ref == 'refs/heads/main' && secrets.AZURE_DEPLOY_TOKEN_MAIN || 
             github.ref == 'refs/heads/staging' && secrets.AZURE_DEPLOY_TOKEN_STAGING ||
-            github.ref == 'refs/heads/dev' && secrets.AZURE_DEPLOY_TOKEN_DEV || 
+            github.ref == 'refs/heads/dev' && secrets.AZURE_DEPLOY_TOKEN_DEV ||
+            github.ref == 'refs/heads/v3' && secrets.AZURE_DEPLOY_TOKEN_DEV_V3 || 
             github.ref == 'refs/heads/localhost' && secrets.AZURE_DEPLOY_TOKEN_LOCAL}}
           action: "upload"
           app_location: "dist/pwa" # App source code path
