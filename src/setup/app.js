@@ -49,7 +49,8 @@ export default {
     'qbuilder',
     'qsite',
     'qcredit',
-    'qoffline'
+    'qoffline',
+    'qwebhook'
   ],
   //Cache
   saveCache: {
