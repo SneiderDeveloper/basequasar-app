@@ -198,6 +198,9 @@ export default async ({ router, store, app }) => {
   router.beforeEach(async (to, from, next) => {
     middleware.redirectTo = false;//Reset redirect to
 
+    //Set previous path
+    to.meta.previousPath = from.path;
+
     //Validate if go to next route
     if (!middleware.allowNavigate) {
       middleware.allowNavigate = true;
