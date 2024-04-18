@@ -26,7 +26,7 @@ const assets = wbManifest.filter((asset: { url: string, revision: string }) => {
 
 // precacheAndRoute(wbManifest)
 
-const requestPOST = new Map<string, Request>()
+const requestPOST = new Map<string, Request>();
 const sentPOST = new Map<string, any>()
 const QUEUE_NAME = 'requests'
 const CACHE_NAME = 'stale-while-revalidate'
