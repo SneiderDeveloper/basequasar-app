@@ -1,22 +1,22 @@
 {
-  "extends": "@quasar/app/tsconfig-preset",
+  "extends": "@quasar/app-webpack/tsconfig-preset",
+  "exclude": ["src/modules", "src/boot", "src/config"],
   "compilerOptions": {
+    "strict": false,
     "baseUrl": ".",
-    "target": "es5",
+    "target": "ES6",
     "sourceMap": true,
     "noImplicitAny": false,
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowJs": true,
-    "types" : ["googlemaps"]
+    "types": ["node"],
+    "lib": ["es2019", "dom", "esnext"],
   },
   "include": [
-    "src/**/*.ts", 
-    "src/**/*.tsx", 
-    "src/**/*.vue", 
-    "node_modules/@imagina/**/*.ts", 
-    "node_modules/@imagina/**/*.tsx", 
-    "node_modules/@imagina/**/*.vue"
-  ],
+    "src//*.ts",
+    "src//.tsx",
+    "src/**/.vue"
+  ]
 }

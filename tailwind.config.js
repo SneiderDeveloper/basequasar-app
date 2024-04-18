@@ -1,30 +1,37 @@
 /** @type {import('tailwindcss').Config} */
-const colors = require('tailwindcss/colors');
+import colors from 'tailwindcss/colors';
+delete colors['lightBlue'];
+delete colors['warmGray'];
+delete colors['trueGray'];
+delete colors['coolGray'];
+delete colors['blueGray'];
+
+const dynamicClasses = [];
+
+const processColor = (color, tone = null) => {
+  dynamicClasses.push(`tw-bg-${color}${tone ? `-${tone}` : ''}`);
+  dynamicClasses.push(`tw-text-${color}${tone ? `-${tone}` : ''}`);
+  dynamicClasses.push(`tw-border-${color}${tone ? `-${tone}` : ''}`);
+};
+
+Object.keys(colors).forEach((colorKey) => {
+  if (typeof colors[colorKey] === 'object') {
+    Object.keys(colors[colorKey]).forEach((tone) => {
+      processColor(colorKey, tone);
+    });
+  } else {
+    processColor(colorKey);
+  }
+});
 
 module.exports = {
   prefix: 'tw-',
-  content: [],
+  content: ["./src/**/*.{html,js,ts,vue}"],
+  safelist: [...dynamicClasses],
   theme: {
-    extend: {},
-    colors: {
-      transparent: 'transparent',
-      current: 'currentColor',
-      black: colors.black,
-      white: colors.white,
-      blue: colors.blue,
-      gray: colors.gray,
-      indigo: colors.indigo,
-      red: colors.red,
-      yellow: colors.yellow,
-      green: colors.green,
-      purple: colors.purple,
-      pink: colors.pink,
-      blueGray: colors.blueGray,
-      orange: colors.orange,
-      lime: colors.lime,
-      teal: colors.teal,
-      cyan: colors.cyan,
+    extend: {
+      colors: {}
     },
   },
   plugins: [],
-}
+};
