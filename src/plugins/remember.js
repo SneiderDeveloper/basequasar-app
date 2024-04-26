@@ -48,7 +48,7 @@ class Remember {
             }
 
           //Save in cache
-          if (params.inCache) await cache.set(params.key, responseData)
+          await cache.set(params.key, responseData)
         }).catch(error => {
           dataError = error
         })
