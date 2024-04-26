@@ -75,6 +75,9 @@ module.exports = configure(function(ctx) {
         if (!config.optimization.minimizer) {
           config.optimization.minimizer = [];
         }
+        /*config.plugins.push(new webpack.optimize.MinChunkSizePlugin({
+          minChunkSize: 10000
+        }));*/
         // Alias
         config.resolve.alias = {
           ...config.resolve.alias,
@@ -89,12 +92,17 @@ module.exports = configure(function(ctx) {
         );
 
         // Minify JavaScript code
-        config.optimization.minimizer.push(
+        /*config.optimization.minimizer.push(
           new TerserPlugin({
             terserOptions: {
               compress: {
                 drop_console: true, // delete console.log in production
-                passes: 3
+                drop_debugger: true,
+                ecma: 6
+              },
+              output: {
+                comments: false,
+                ecma: 6
               }
             }
           })
@@ -109,14 +117,7 @@ module.exports = configure(function(ctx) {
             threshold: 10240, // Comprimir archivos mayores a 10 KB
             minRatio: 0.8 // Comprimir si el resultado es al menos 80% más pequeño
           }),
-          new CompressionPlugin({
-            filename: '[path][base].gz', // Usar extensión .gz para Gzip
-            algorithm: 'gzip', // Utilizar Gzip para comprimir
-            test: /\.(js|.ts|css|html|svg)$/,
-            threshold: 10240, // Comprimir archivos mayores a 10 KB
-            minRatio: 0.8 // Comprimir si el resultado es al menos 80% más pequeño
-          })
-        );
+        );*/
       },
       // transpile: false,
       // publicPath: '/',
@@ -138,7 +139,7 @@ module.exports = configure(function(ctx) {
       // https://v2.quasar.dev/quasar-cli-webpack/handling-webpack
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
       chainWebpack(config) {
-        config.optimization.splitChunks({
+        /*config.optimization.splitChunks({
           chunks: 'all',
           cacheGroups: {
             vendor: {
@@ -149,7 +150,7 @@ module.exports = configure(function(ctx) {
               enforce: true,
             },
           },
-        });
+        });*/
       },
     },
 
