@@ -76,8 +76,11 @@ class Middleware {
         //Close modals
         let modals = document.getElementsByClassName('q-dialog');
         if (modals && modals.length) {
-          modals[modals.length - 1].__vue__.$parent.hide();//close modal
-          closedModal = true;
+          const lastModal = modals[modals.length - 1];
+          if (lastModal && lastModal.__vue__) {
+            lastModal.__vue__.$parent.hide(); // Close modal
+            closedModal = true;
+          }
         }
       }
 
