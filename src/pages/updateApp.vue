@@ -1,9 +1,21 @@
 <script lang="ts" setup>
-    import { i18n, store, router } from 'src/plugins/utils';
+    import  { onMounted } from 'vue'
+    import { useRoute } from 'vue-router'
+    import { i18n, store, router, cache } from 'src/plugins/utils';
+
+    const route = useRoute()
+    const KEY = 'api.version'
+
+    onMounted(async () => {
+        const version = await cache.get.item(KEY)
+        if (route.query.version === version) {
+            router.go(-1);
+        }
+    })
 
     const update = () => {
+        cache.set(KEY, route.query.version)
         store.dispatch('qsiteApp/REFRESH_PAGE');
-        router.go(-1);
     }
 </script>
 
