@@ -136,16 +136,22 @@ export default function({ app, router, store, ssrContext }) {
       showMessages(response.data.messages);
     }
 
-    //Check if the version is updated
-    if (response.headers['x-app-version'] > config('app.version')) {
-      const isRefresh = await cache.get.item('isRefresh::offline')
+    const KEY = 'version::offline'
+    const backendVersion = response.headers['x-app-version']
 
-      if (!isRefresh) {
-        cache.set('isRefresh::offline', true)
-        window.location.reload()
+    const version = await cache.get.item(KEY)
+
+    if (version) {
+      //Check if the version is updated
+      if (backendVersion > version) {
+
+        router.push({ 
+          name: 'app.update.app', 
+          query: { version: backendVersion } 
+        })
       }
-
-      router.push({ name: 'app.update.app' })
+    } else {
+      await cache.set(KEY, backendVersion)
     }
 
     //Response
