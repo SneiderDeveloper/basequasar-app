@@ -136,7 +136,7 @@ export default function({ app, router, store, ssrContext }) {
       showMessages(response.data.messages);
     }
 
-    const KEY = 'version::offline'
+    const KEY = 'api.version'
     const backendVersion = response.headers['x-app-version']
 
     const version = await cache.get.item(KEY)

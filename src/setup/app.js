@@ -64,7 +64,8 @@ export default {
       'org-wizard-data',
       'org-wizard-categories',
       'org-wizard-plans',
-      'org-wizard-step'
+      'org-wizard-step',
+      'api.version'
     ],
     logout: [
       'offlineRequests',
@@ -76,7 +77,8 @@ export default {
       'org-wizard-data',
       'org-wizard-categories',
       'org-wizard-plans',
-      'org-wizard-step'
+      'org-wizard-step',
+      'api.version'
     ]
   },
   //Cache Time in Seconds

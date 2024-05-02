@@ -4,10 +4,10 @@
     import { i18n, store, router, cache } from 'src/plugins/utils';
 
     const route = useRoute()
-    const KEY = 'version::offline'
+    const KEY = 'api.version'
 
-    onMounted(() => {
-        const version = cache.get.item(KEY)
+    onMounted(async () => {
+        const version = await cache.get.item(KEY)
         if (route.query.version === version) {
             router.go(-1);
         }
