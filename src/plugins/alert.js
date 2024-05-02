@@ -71,7 +71,7 @@ class Alert {
   //Alert info
   info(params = {}) {
     params = this.getGlobalParams(params)
-    params.icon = params.icon || 'fa-solid fa-circle-info'
+    params.icon = params.icon || 'fa-solid fa-circle-xmark'
     params.color = 'cyan'
     //Show
     if (params.mode && (params.mode == 'modal')) this.showModal(params)
