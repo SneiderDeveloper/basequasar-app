@@ -99,7 +99,10 @@ export default {
           type: 'dateRange',
           props: {
             label: 'type: Date Range',
-            mask: "YYYY-MM-DD - YYYY-MM-DD" //YYYY/MM/DD - YYYY/MM/DD
+            mask: 'YYYY-MM-DD', //YYYY/MM/DD
+            field: 'blockInBlockOut',
+            startOfDay: '10:00:00',
+            endOfDay: '16:59:59',
           }
         },
         select: {
