@@ -4,28 +4,29 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { eventBus } from 'src/plugins/utils';
+import { eventBus, store } from 'src/plugins/utils';
 
 export default defineComponent({
   name: 'App',
-  mounted ()
-  {
+  mounted () {
     this.$q.iconSet.arrow.dropdown = 'fa fa-caret-down';
     this.$q.iconSet.expansionItem.icon = 'fa fa-chevron-down';
     // Listen Service worker updates
     eventBus.on('service-worker.update.available', () =>
     {
       this.$alert.info({
+        mode: 'modal',
+        title: this.$tr('isite.cms.messages.updateAvailable'),
         message: this.$tr('isite.cms.message.swUpdateAvailable'),
-        pos: 'top',
         icon: 'fas fa-cloud-download-alt',
         timeOut: 15000,
         actions: [
           {
             label: 'Ok',
-            icon: '',
-            color: 'white',
-            handler: () => window.location.reload()
+            handler: async () => {
+              await store.dispatch('qsiteApp/CLEAR_CACHE_STORAGE')
+              await store.dispatch('qsiteApp/DELETE_SW')
+            }
           }
         ]
       });
