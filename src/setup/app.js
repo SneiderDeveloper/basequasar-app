@@ -39,7 +39,6 @@ export default {
     'qpage',
     'qredirect',
     'qmenu',
-    'qmedia',
     'qslider',
     'qchat',
     'qqreable',
