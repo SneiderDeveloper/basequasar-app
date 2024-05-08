@@ -141,13 +141,15 @@ export default function({ app, router, store, ssrContext }) {
 
     const version = await cache.get.item(KEY)
 
-    if (version) {
+    if (version && backendVersion) {
       //Check if the version is updated
       if (backendVersion > version) {
-
         router.push({ 
-          name: 'app.update.app', 
-          query: { version: backendVersion } 
+          name: 'app.update.app',
+          query: {
+            refresh: false,
+            version: backendVersion,
+          } 
         })
       }
     } else {
