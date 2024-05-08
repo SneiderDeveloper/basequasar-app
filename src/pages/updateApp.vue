@@ -1,24 +1,33 @@
 <script lang="ts" setup>
-    import  { onMounted } from 'vue'
+    import  { onBeforeMount } from 'vue'
     import { useRoute } from 'vue-router'
     import { i18n, store, router, cache } from 'src/plugins/utils';
 
     const route = useRoute()
     const KEY = 'api.version'
 
-    onMounted(async () => {
-        const version = await cache.get.item(KEY)
-        if (route.query.version === version) {
-            router.go(-1);
+    onBeforeMount(async () => {
+        if (route.query.refresh === 'true') {
+            router.push({
+                name: 'app.home',
+            })
         }
     })
 
-    const update = () => {
-        cache.set(KEY, route.query.version)
-        store.dispatch('qsiteApp/REFRESH_PAGE');
+    const update = async () => {
+        await cache.set(KEY, route.query.version)
+        router.push({
+            query: {
+                ...route.query,
+                refresh: true
+            }
+        })
+        await store.dispatch('qsiteApp/REFRESH_PAGE');
+        await store.dispatch('qsiteApp/CLEAR_CACHE_STORAGE');
+        await store.dispatch('qsiteApp/DELETE_SW');
+        window.location.reload();
     }
 </script>
-
 <template>
     <div 
         class="
