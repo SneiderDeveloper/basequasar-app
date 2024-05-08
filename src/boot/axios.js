@@ -138,21 +138,20 @@ export default function({ app, router, store, ssrContext }) {
 
     const KEY = 'api.version'
     const backendVersion = response.headers['x-app-version']
-
     const version = await cache.get.item(KEY)
 
     if (version && backendVersion) {
       //Check if the version is updated
       if (backendVersion > version) {
-        router.push({ 
+        router.push({
           name: 'app.update.app',
           query: {
             refresh: false,
             version: backendVersion,
-          } 
+          }
         })
       }
-    } else {
+    } else if(backendVersion){
       await cache.set(KEY, backendVersion)
     }
 

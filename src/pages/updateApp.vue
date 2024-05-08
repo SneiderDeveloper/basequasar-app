@@ -56,6 +56,8 @@ const update = async () =>
   await store.dispatch('qsiteApp/REFRESH_PAGE');
   await store.dispatch('qsiteApp/CLEAR_CACHE_STORAGE');
   await store.dispatch('qsiteApp/DELETE_SW');
+  //Let this after success refresh
+  if (route.query.version) await cache.set('api.version', route.query.version);
   window.location.reload();
 };
 </script>
