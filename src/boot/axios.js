@@ -142,16 +142,15 @@ export default function({ app, router, store, ssrContext }) {
 
     if (version && backendVersion) {
       //Check if the version is updated
-      if (backendVersion > version) {
+      if (backendVersion > version && router.currentRoute.value.name != 'app.update.app') {
         router.push({
           name: 'app.update.app',
           query: {
-            refresh: false,
-            version: backendVersion,
+            version: backendVersion
           }
         })
       }
-    } else if(backendVersion){
+    } else if (backendVersion) {
       await cache.set(KEY, backendVersion)
     }
 
