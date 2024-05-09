@@ -1,6 +1,6 @@
 <template>
   <div class="tw-flex tw-justify-center tw-items-center tw-bg-gray-100 tw-h-screen">
-    <div class="tw-w-fit tw-bg-white tw-p-6 tw-mx-5 tw-rounded-xl tw-shadow-lg">
+    <div class="tw-max-w-xl tw-bg-white tw-p-6 tw-mx-5 tw-rounded-xl tw-shadow-lg">
       <div class="text-center">
         <q-icon name="fa-regular fa-rocket-launch" size="xl" color="secondary" />
         <div class="tw-text-2xl tw-font-bold tw-my-5 text-blue">
