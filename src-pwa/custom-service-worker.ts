@@ -27,7 +27,7 @@ clientsClaim();
 setCacheNameDetails({
   prefix: 'compile-time',
   precache: 'precache',
-  suffix: 'v15',
+  suffix: 'v2',
 })
 
 // Use with precache injection
