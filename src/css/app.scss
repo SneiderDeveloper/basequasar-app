@@ -520,3 +520,50 @@ a {
 .fa.fa-caret-down {
   font-size: 12px;
 }
+
+#q-notify .q-notifications {
+  .q-notification{
+    max-width: 600px;
+    position: relative;
+    border-radius: 5px;
+
+    &::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 8px;
+      width: calc(100% - 8px);
+      height: 100%;
+      background-color: white;
+      z-index: -1;
+      pointer-events: none;
+      border-radius: 0 5px 5px 0;
+    }
+
+    .q-notification__content {
+      align-items: flex-start;
+
+      .q-notification__icon {
+        margin-top: 10px;
+        font-size: 22px;
+      }
+
+      .notify__title {
+        color: #333333;
+        font-size: 16px;
+      }
+    }
+
+    .q-notification__progress {
+      z-index: 10;
+    }
+
+    .q-notification__message, .q-notification__actions button {
+      color: #666666;
+    }
+
+    .q-notification__actions:has(> :last-child:nth-child(1)) {
+      align-self: flex-start;
+    }
+  }
+}
