@@ -10,21 +10,28 @@ self.__WB_DISABLE_DEV_LOGS = true;
 declare const self: ServiceWorkerGlobalScope &
   typeof globalThis & { skipWaiting: () => void }
 
-import { precacheAndRoute } from 'workbox-precaching'
+import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching'
 import { registerRoute } from 'workbox-routing'
 import { ExpirationPlugin } from 'workbox-expiration'
 import { NetworkFirst, CacheFirst } from 'workbox-strategies'
-import { Queue, QueueStore } from 'workbox-background-sync'
+import { Queue } from 'workbox-background-sync'
+import { clientsClaim, setCacheNameDetails } from 'workbox-core';
+
+cleanupOutdatedCaches()
+
+// clientsClaim() is used so that a new Service Worker 
+// takes control of existing client windows (browser tabs) 
+// that are still controlled by a previous Service Worker.
+clientsClaim();
+
+setCacheNameDetails({
+  prefix: 'compile-time',
+  precache: 'precache',
+  suffix: 'v15',
+})
 
 // Use with precache injection
-const wbManifest = [ ...self.__WB_MANIFEST ]
-
-// filtering resources to cache
-const assets = wbManifest.filter((asset: { url: string, revision: string }) => {
-  return asset.url.includes('src_modules');
-});
-
-// precacheAndRoute(wbManifest)
+precacheAndRoute(self.__WB_MANIFEST)
 
 const requestPOST = new Map<string, Request>()
 const sentPOST = new Map<string, any>()
