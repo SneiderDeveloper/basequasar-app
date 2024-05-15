@@ -41,7 +41,9 @@ onBeforeMount(async () =>
 {
   //Redirect after update
   if (route.query.updated) router.push({
-    name: route.query.fromVueRoute || 'app.home'
+    name: route.query.fromVueRoute || 'app.home',
+    query: { ...JSON.parse(route.query.fromVueRouteQuery) },
+    params: { ...JSON.parse(route.query.fromVueRouteParams) },
   }); else
   {
     // Start countdown to auto-update
