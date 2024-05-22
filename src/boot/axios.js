@@ -59,25 +59,6 @@ export default function({ app, router, store, ssrContext }) {
     });
   }
 
-  async function addRequestDB(request, userID) {
-    const globalProperties = app.config.globalProperties;
-    const objReq = {
-      _id: new Date().toISOString(),
-      ...request
-    };
-    const allRequests = await cache.get.item('requests') || {};
-    if (allRequests[userID]) {
-      allRequests[userID].push(objReq);
-    } else {
-      allRequests[userID] = [];
-      allRequests[userID].push(objReq);
-    }
-    cache.set('requests', allRequests);
-    alert.standar({
-      message: globalProperties.$tr('isite.cms.message.requestAdded')
-    });
-  }
-
   function getOfflineTitle(config) {
     if (config.data) {
       return config.data.titleOffline || config.params.titleOffline;
@@ -99,25 +80,6 @@ export default function({ app, router, store, ssrContext }) {
 
   //========== Request interceptor
   axios.interceptors.request.use(async function(config) {
-    // Do something before request is sent
-    if (!navigator.onLine && config.method !== 'get') {
-      const titleOffline = getOfflineTitle(config);
-      const user = await cache.get.item('sessionData');
-      const request = {
-        url: config.baseURL + config.url,
-        headers: config.headers,
-        method: config.method,
-        body: config.data ? JSON.stringify(config.data) : null,
-        createdAt: new Date().getTime(),
-        userId: user.userData.id,
-        status: 'pending',
-        httpStatus: 0,
-        errorLog: '',
-        params: config.params,
-        titleOffline
-      };
-      addRequestDB(request, user.userData.id);
-    }
     store.dispatch('quserAuth/REFRESH_TOKEN');
     //Set abortController for the GET methods
     if (config.method == 'get') {
