@@ -1,14 +1,10 @@
 import { cache } from 'src/plugins/utils';
 
-export default async function paginateCacheOffline(fountain, search = null, page = 1, perPage = 10, params) {
+export default async function paginateCacheOffline(fountain, search = null, page = 1, perPage = 10) {
   let data = null;
-  const key = `${fountain}::${`requestParams[${JSON.stringify(params?.params)}]`}`
 
   if (typeof fountain === 'string') {
-    data = await cache.get.item(key);
-    if (!data) {
-      data = await cache.get.item(`${fountain}::offline`) || { data: [] };
-    }
+    data = await cache.get.item(`${fountain}::offline`) || { data: [] };
   }
     
 
