@@ -66,6 +66,12 @@ module.exports = configure(function(ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-webpack/quasar-config-js#Property%3A-build
     build: {
+      vueLoaderOptions: {
+        // Options for vue-template-compiler
+        compilerOptions: {
+          isCustomElement: tag => tag.startsWith('vue-advanced-chat') || tag.startsWith('emoji-picker')
+        }
+      },
       vueRouterMode: 'hash', // available values: 'hash', 'history'
       extendWebpack(config) {
         if (!config.optimization) {
