@@ -163,6 +163,14 @@ class Middleware {
         }
       }
 
+      if (to.name == 'app.update.app' && to.query.updated) {
+        this.redirectTo = {
+          name: to.query.fromVueRoute || 'app.home',
+          query: { ...JSON.parse(to.query.fromVueRouteQuery) },
+          params: { ...JSON.parse(to.query.fromVueRouteParams) },
+        };
+      }
+
       //Response
       resolve(true);
     });
