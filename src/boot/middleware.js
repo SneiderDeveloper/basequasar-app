@@ -167,7 +167,7 @@ class Middleware {
         this.redirectTo = {
           name: to.query.fromVueRoute || 'app.home',
           query: { ...JSON.parse(to.query.fromVueRouteQuery) },
-          params: { ...JSON.parse(to.query.fromVueRouteParams) },
+          params: { ...JSON.parse(to.query.fromVueRouteParams) }
         };
       }
 
@@ -199,6 +199,7 @@ class Middleware {
       to.query.fromVueRoute = from.name;
       to.query.fromVueRouteParams = JSON.stringify(from.params);
       to.query.fromVueRouteQuery = JSON.stringify(from.query);
+      to.query.updated = '1';
       to.fullPath = `${to.path}?${Object.entries(to.query).map(([key, value]) => `${key}=${value}`).join('&')}`;
     }
 
