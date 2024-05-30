@@ -33,11 +33,11 @@ onMounted(async () => await update());
 
 const update = async () =>
 {
-  await Promise.allSettled([
-    await store.dispatch('qsiteApp/REFRESH_PAGE'),
-    await store.dispatch('qsiteApp/CLEAR_CACHE_STORAGE'),
-    await store.dispatch('qsiteApp/DELETE_SW'),
-    ...(route.query.version ? [await cache.set('api.version', route.query.version)] : [])
+  Promise.allSettled([
+    store.dispatch('qsiteApp/REFRESH_PAGE'),
+    store.dispatch('qsiteApp/CLEAR_CACHE_STORAGE'),
+    store.dispatch('qsiteApp/DELETE_SW'),
+    route.query.version ? cache.set('api.version', route.query.version) : null
   ]);
   window.location.reload()
 };
