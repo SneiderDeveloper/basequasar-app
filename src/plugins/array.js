@@ -82,11 +82,13 @@ class Array {
   select(dataArray, fields = {label: 'title', id: 'id', img: 'mainImage'}) {
     let response = []
     dataArray.forEach((item) => {
-      let label = typeof fields.label != 'function' ? item[fields.label] :
-        fields.label(item)
+      let label = typeof fields.label != 'function' ? item[fields.label] : fields.label(item)
+      let sublabel = !fields.sublabel ? null :
+        (typeof fields.sublabel != 'function' ? item[fields.sublabel] : fields.sublabel(item))
 
       response.push({
-        label: label,
+        label,
+        sublabel,
         id: item[fields.id],
         value: item[fields.id],
         img: item[fields.img] || null
