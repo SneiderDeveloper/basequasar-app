@@ -33,7 +33,7 @@ onMounted(async () => await update());
 
 const update = async () =>
 {
-  Promise.allSettled([
+  await Promise.allSettled([
     store.dispatch('qsiteApp/REFRESH_PAGE'),
     store.dispatch('qsiteApp/CLEAR_CACHE_STORAGE'),
     store.dispatch('qsiteApp/DELETE_SW'),
