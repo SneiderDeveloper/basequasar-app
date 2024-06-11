@@ -71,6 +71,7 @@ import Alert from 'modules/qoffline/_components/alert.vue'
 import bannerAlert from 'modules/qsite/_components/master/bannerAlert.vue'
 import _pages from 'src/setup/pages';
 import _ from 'lodash';
+import { eventBus } from 'src/plugins/utils.ts';
 
 export default {
   name: 'MasterLayout',
@@ -115,17 +116,20 @@ export default {
       modalForce: {
         shouldChangePassword: false
       },
-      configBannerOffline: {
-        icon: {
-          name: 'fa-regular fa-wifi-slash',
+      bannerType: {
+        offline: {
+          icon: {
+            name: 'fa-regular fa-wifi-slash',
+          },
+          message: this.$tr('isite.cms.message.appOffline'),
+          classWrapper: 'tw-text-white tw-bg-gray-900',
+          action: () => eventBus.emit('toggleMasterDrawer', 'offline')
         },
-        message: this.$tr('isite.cms.message.appOffline'),
-        classWrapper: 'tw-text-white tw-bg-gray-900'
-      },
-      configBannerNotification: {
-        marquee: true,
-        message: this.$store.getters['qsiteApp/getSettingValueByName']('isite::globalWarningMessage'),
-        classWrapper: 'tw-bg-yellow-400 tw-text-black tw-font-semibold',
+        notification: {
+          marquee: true,
+          message: this.$store.getters['qsiteApp/getSettingValueByName']('isite::globalWarningMessage'),
+          classWrapper: 'tw-bg-yellow-400 tw-text-black tw-font-semibold',
+        }
       }
     };
   },
@@ -266,8 +270,8 @@ export default {
       }
     },
     configBanner() {
-      if (this.isAppOffline) return this.configBannerOffline 
-      if (this.isWarning) return this.configBannerNotification
+      if (this.isAppOffline) return this.bannerType.offline 
+      if (this.isWarning) return this.bannerType.notification
     }
   }
 };
