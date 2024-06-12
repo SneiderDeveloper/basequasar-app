@@ -20,7 +20,7 @@ const clone = <T>(dataToClone: T): T => {
   return lodash.cloneDeepWith(dataToClone, (value: any) => {
     //Not clone File or Blob  type
     // @ts-ignore
-    if (value instanceof File || value instanceof Blob) {
+    if (value instanceof File || value instanceof Blob || typeof value == 'function') {
       return value
     }
   })
