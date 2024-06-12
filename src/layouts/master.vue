@@ -9,7 +9,7 @@
     <!-- ROUTER VIEW -->
     <q-page-container>
       <!--Page route-->
-      <offlineAlert v-if="isAppOffline" />
+      <bannerAlert v-bind="configBanner()" v-if="isAppOffline || isWarning" />
       <div id="routeInformationContent" v-if="appConfig.mode == 'iadmin'"
            :class="`q-hide q-md-show ${iadminTheme == 1 ? 'bg-primary' : 'bg-white'}`">
         <div id="subContent" class="row justify-between items-center">
@@ -68,9 +68,10 @@ import footerPanel from 'modules/qsite/_components/panel/footer';
 import cropperComponent from 'modules/qsite/_components/master/cropper';
 import activitiesActions from 'modules/qgamification/_components/activitiesActions/index.vue';
 import Alert from 'modules/qoffline/_components/alert.vue'
-import offlineAlert from 'modules/qsite/_components/master/offlineAlert.vue'
+import bannerAlert from 'modules/qsite/_components/master/bannerAlert.vue'
 import _pages from 'src/setup/pages';
 import _ from 'lodash';
+import { eventBus } from 'src/plugins/utils.ts';
 
 export default {
   name: 'MasterLayout',
@@ -91,7 +92,7 @@ export default {
     footerPanel,
     //Offline
     Alert,
-    offlineAlert
+    bannerAlert
   },
   watch: {
     shouldChangePassword(data) {
@@ -114,6 +115,21 @@ export default {
       homePage: 'isite_cms_main_home',
       modalForce: {
         shouldChangePassword: false
+      },
+      bannerType: {
+        offline: {
+          icon: {
+            name: 'fa-regular fa-wifi-slash',
+          },
+          message: this.$tr('isite.cms.message.appOffline'),
+          classWrapper: 'tw-text-white tw-bg-gray-900',
+          action: () => eventBus.emit('toggleMasterDrawer', 'offline')
+        },
+        notification: {
+          marquee: true,
+          message: this.$store.getters['qsiteApp/getSettingValueByName']('isite::globalWarningMessage'),
+          classWrapper: 'tw-bg-yellow-400 tw-text-black tw-font-semibold',
+        }
       }
     };
   },
@@ -206,6 +222,9 @@ export default {
           view: 'popup'
         }
       };
+    },
+    isWarning() {
+      return this.$store.getters['qsiteApp/getSettingValueByName']('isite::globalWarningMessage')
     }
   },
   methods: {
@@ -249,6 +268,10 @@ export default {
         document.onmousemove = resetTimer;
         document.onkeydown = resetTimer;
       }
+    },
+    configBanner() {
+      if (this.isAppOffline) return this.bannerType.offline 
+      if (this.isWarning) return this.bannerType.notification
     }
   }
 };
