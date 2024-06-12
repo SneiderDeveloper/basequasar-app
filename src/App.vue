@@ -15,20 +15,7 @@ export default defineComponent({
     // Listen Service worker updates
     eventBus.on('service-worker.update.available', () =>
     {
-      this.$alert.info({
-        message: this.$tr('isite.cms.message.swUpdateAvailable'),
-        pos: 'top',
-        icon: 'fas fa-cloud-download-alt',
-        timeOut: 15000,
-        actions: [
-          {
-            label: 'Ok',
-            icon: '',
-            color: 'white',
-            handler: () => window.location.reload()
-          }
-        ]
-      });
+      this.$router.push({ name: 'app.update.app' });
     });
   }
 });
