@@ -89,6 +89,22 @@ export default {
           type: 'fullDate',
           props: {label: 'type: fullDate'}
         },
+        dateRange: {
+          ...globalData,
+          value: {
+            type: 'customRange',
+            from: '2024-05-04 00:00:00',  //2024/05/01 00:00:00
+            to: '2024-05-14 23:59:59'  //2024/05/04 23:59:59
+          },
+          type: 'dateRange',
+          props: {
+            label: 'type: Date Range',
+            mask: 'YYYY-MM-DD', //YYYY/MM/DD
+            field: 'blockInBlockOut',
+            startOfDay: '10:00:00',
+            endOfDay: '16:59:59',
+          }
+        },
         select: {
           ...globalData,
           type: 'select',
