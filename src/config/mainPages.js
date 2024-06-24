@@ -53,6 +53,7 @@ export default {
     icon: 'fas fa-flask',
     authenticated: true,
   },
+  //Page to update cache
   updateApp: {
     permission: null,
     activated: true,
@@ -62,6 +63,6 @@ export default {
     page: () => import('src/pages/updateApp'),
     title: 'sidebar.updateApp',
     icon: 'fas fa-flask',
-    authenticated: true,
+    authenticated: false,
   },
 }

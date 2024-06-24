@@ -3,7 +3,7 @@ import {Notify} from 'quasar'
 import {Dialog} from 'quasar'
 
 //Components
-import alertModal from 'modules/qsite/_components/master/alertModal'
+import alertModal from 'src/modules/qsite/_components/master/alertModal'
 
 class Alert {
   constructor() {
@@ -15,7 +15,7 @@ class Alert {
       timeOut: 4000,
       actions: [],
       color: 'primary',
-      textColor: 'white',
+      textColor: 'grey',
       ...config('app.alert')
     }
   }
@@ -45,47 +45,62 @@ class Alert {
     params.color = 'bg-grey-14'
     //Show
     if (params.mode && (params.mode == 'modal')) this.showModal(params)
-    else this.showNotify(params)
+    else {
+      params.textColor = 'grey-14'
+      this.showNotify(params)
+    }
   }
 
   //Alert success
   success(params = {}) {
     params = this.getGlobalParams(params)
     params.icon = params.icon || 'fa-light fa-bell'
-    params.color = 'green'
+    params.color = 'green-5'
     //Show
     if (params.mode && (params.mode == 'modal')) this.showModal(params)
-    else this.showNotify(params)
+    else {
+      params.textColor = 'green-5'
+      this.showNotify(params)
+    }
   }
 
   //Alert Error
   error(params = {}) {
     params = this.getGlobalParams(params)
-    params.icon = params.icon || 'fas fa-info-circle'
-    params.color = 'red'
+    params.icon = params.icon || 'fa-solid fa-circle-xmark'
+    params.color = 'red-5'
     //Show
     if (params.mode && (params.mode == 'modal')) this.showModal(params)
-    else this.showNotify(params)
+    else {
+      params.textColor = 'red-5'
+      this.showNotify(params);
+    }
   }
 
   //Alert info
   info(params = {}) {
     params = this.getGlobalParams(params)
-    params.icon = params.icon || 'fa-solid fa-circle-info'
-    params.color = 'cyan'
+    params.icon = params.icon || 'fas fa-info-circle'
+    params.color = 'light-blue-6'
     //Show
     if (params.mode && (params.mode == 'modal')) this.showModal(params)
-    else this.showNotify(params)
+    else {
+      params.textColor = 'light-blue-6'
+      this.showNotify(params);
+    }
   }
 
   //Alert warning
   warning(params = {}) {
     params = this.getGlobalParams(params)
     params.icon = params.icon || 'fa fa-warning'
-    params.color = 'orange'
+    params.color = 'orange-12'
     //Show
     if (params.mode && (params.mode == 'modal')) this.showModal(params)
-    else this.showNotify(params)
+    else {
+      params.textColor = 'orange-12'
+      this.showNotify(params)
+    }
   }
 
   //Alert light
@@ -95,7 +110,10 @@ class Alert {
     params.color = 'faded'
     //Show
     if (params.mode && (params.mode == 'modal')) this.showModal(params)
-    else this.showNotify(params)
+    else {
+      params.textColor = 'grey-8'
+      this.showNotify(params)
+    }
   }
 
   //Alert dark
@@ -105,21 +123,31 @@ class Alert {
     params.color = 'black'
     //Show
     if (params.mode && (params.mode == 'modal')) this.showModal(params)
-    else this.showNotify(params)
+    else {
+      params.textColor = 'dark'
+      this.showNotify(params)
+    }
   }
 
   //Show Notify
   showNotify(params) {
+    //Added title if exist
+    const message = params.title ? `
+    <strong class="notify__title">${params.title}</strong>
+    <br/>
+    <span>${params.message}</span>
+    ` : params.message
+
     Notify.create({
       ...params,
-      message: params.message,
+      message: message,
       icon: params.icon,
       progress: params.progress,
       timeout: params.action ? 0 : (params.timeout || params.timeOut),
       color: params.color,
       textColor: params.textColor,
       position: params.pos,
-      actions: params.actions.length ? params.actions : [{label: 'Ok', color: 'white'}],
+      actions: params.actions.length ? params.actions : [{icon: 'fa-light fa-xmark', color: 'gray', round: true}],
       html: true
     })
   }
