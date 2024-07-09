@@ -7,7 +7,7 @@ tagsToParceHost.forEach(tagToReplace => host = host.replace(tagToReplace, ''));
 let loadFrom = host.split('/')[1];
 
 export default {
-  baseUrl: 'https://app-agione-stag-use2-01.azurewebsites.net',
+  baseUrl: 'https://agionedev.azurewebsites.net',
   version: pjson.version,//Package version
   mode: (loadFrom && (['iadmin', 'ipanel'].indexOf(loadFrom) != -1)) ? loadFrom : 'iadmin',//Define load mode
   validateModeAccess: true,//Define if validate app mode access
