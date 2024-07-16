@@ -4,7 +4,7 @@
   "compilerOptions": {
     "strict": false,
     "baseUrl": ".",
-    "target": "ES6",
+    "target": "es5",
     "sourceMap": true,
     "noImplicitAny": false,
     "skipLibCheck": true,
