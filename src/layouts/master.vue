@@ -48,6 +48,8 @@
 
     <!-- FOOTER -->
     <component :is="components.footer" />
+
+    <notification-dialog />
   </q-layout>
 </template>
 
@@ -72,6 +74,7 @@ import bannerAlert from 'modules/qsite/_components/master/bannerAlert.vue'
 import _pages from 'src/setup/pages';
 import _ from 'lodash';
 import { eventBus } from 'src/plugins/utils.ts';
+import notificationDialog from 'src/modules/qnotification/_components/notificationDialog/index.vue'
 
 export default {
   name: 'MasterLayout',
@@ -92,7 +95,9 @@ export default {
     footerPanel,
     //Offline
     Alert,
-    bannerAlert
+    bannerAlert,
+    //Notification
+    notificationDialog
   },
   watch: {
     shouldChangePassword(data) {
@@ -270,7 +275,7 @@ export default {
       }
     },
     configBanner() {
-      if (this.isAppOffline) return this.bannerType.offline 
+      if (this.isAppOffline) return this.bannerType.offline
       if (this.isWarning) return this.bannerType.notification
     }
   }

@@ -163,6 +163,14 @@ class Middleware {
         }
       }
 
+      if (to.name == 'app.update.app' && to.query.updated) {
+        this.redirectTo = {
+          name: to.query.fromVueRoute || 'app.home',
+          query: { ...JSON.parse(to.query.fromVueRouteQuery) },
+          params: { ...JSON.parse(to.query.fromVueRouteParams) }
+        };
+      }
+
       //Response
       resolve(true);
     });
@@ -188,9 +196,10 @@ class Middleware {
 
     //Include fromVueRoter to updatePage
     if (to.name == 'app.update.app' && !to.query.updated && from.name != 'app.update.app') {
-      to.query.fromVueRoute = from.name;
+      if(from.name) to.query.fromVueRoute = from.name;
       to.query.fromVueRouteParams = JSON.stringify(from.params);
       to.query.fromVueRouteQuery = JSON.stringify(from.query);
+      to.query.updated = '1';
       to.fullPath = `${to.path}?${Object.entries(to.query).map(([key, value]) => `${key}=${value}`).join('&')}`;
     }
 
