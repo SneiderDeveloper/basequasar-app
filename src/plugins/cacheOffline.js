@@ -81,7 +81,7 @@ class cacheOffline {
     const dataInCache = structuredClone(cacheResponse);
 
     Object.keys(dataInCache).map(async key => {
-      if (!Array.isArray(dataInCache[key].data)) return;
+      if (!Array.isArray(dataInCache[key]?.data)) return;
       const index = dataInCache[key].data.findIndex(
         item => String(item.id) === String(itemId)
       );

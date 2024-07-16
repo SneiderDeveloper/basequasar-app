@@ -80,7 +80,6 @@ export default function({ app, router, store, ssrContext }) {
 
   //========== Request interceptor
   axios.interceptors.request.use(async function(config) {
-    // Do something before request is sent
     store.dispatch('quserAuth/REFRESH_TOKEN');
     //Set abortController for the GET methods
     if (config.method == 'get') {
@@ -101,19 +100,19 @@ export default function({ app, router, store, ssrContext }) {
 
     const KEY = 'api.version'
     const backendVersion = response.headers['x-app-version']
-
     const version = await cache.get.item(KEY)
 
-    if (version) {
+    if (version && backendVersion) {
       //Check if the version is updated
-      if (backendVersion > version) {
-
-        router.push({ 
-          name: 'app.update.app', 
-          query: { version: backendVersion } 
+      if (backendVersion > version && router.currentRoute.value.name != 'app.update.app') {
+        router.push({
+          name: 'app.update.app',
+          query: {
+            version: backendVersion
+          }
         })
       }
-    } else {
+    } else if (backendVersion) {
       await cache.set(KEY, backendVersion)
     }
 
