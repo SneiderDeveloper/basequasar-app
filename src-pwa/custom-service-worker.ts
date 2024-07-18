@@ -36,6 +36,18 @@ precacheAndRoute(self.__WB_MANIFEST);
 const requestPOST = new Map<string, Request>();
 const sentPOST = new Map<string, any>();
 const QUEUE_NAME = 'requests';
+const status = {
+  pending: 'PENDING',
+  successful: 'SUCCESSFUL',
+  failed: 'FAILED',
+}
+const methods = {
+  post: 'POST',
+  put: 'PUT',
+  delete: 'DELETE',
+}
+const NAME_OBJECT_STORE = 'storage';
+const KEY_REQUESTS_IN_STORAGE = 'requests';
 // const CACHE_NAME = 'runtime-cache';
 
 // const plugins = [
@@ -163,8 +175,9 @@ const prepareRequest = async (entry) => {
   try {
     const method = entry.request.method;
     const requestId = entry.metadata?.requestId;
+    const request = entry.request.clone()
 
-    const dataBody = await transformReadableStreamToObject(entry.request.clone().body);
+    const dataBody = JSON.parse(await request.text())
     const idAttribute = dataBody?.attributes?.id;
     const databaseGeneratedId = sentPOST.get(requestId);
 
@@ -176,7 +189,7 @@ const prepareRequest = async (entry) => {
 
     const body = JSON.stringify(dataBody);
 
-    const requestAttributes = method === 'DELETE' ? { body: null, method: 'DELETE' } : { body };
+    const requestAttributes = method === methods.delete ? { body: null, method: methods.delete } : { body };
     const newRequest = await replaceRequestUrlWithStoredUrl(
       entry.request.clone(),
       requestId,
@@ -207,11 +220,11 @@ const nameDB = () => {
 }
 
 const openConnectionWithIndexedDB = () => {
-  const openDB = indexedDB.open(nameDB());
-  return openDB;
+  // return indexedDB.open(nameDB());
+  return indexedDB.open('localhost:8080DB');
 }
 
-const executeTransaction = (key: string, objectStore: string): Promise<any> => {
+const executeTransaction = (objectStore: string, key: string): Promise<any> => {
   return new Promise((resolve, reject) => {
     try {
       const openDB = openConnectionWithIndexedDB()
@@ -241,10 +254,10 @@ const executeTransaction = (key: string, objectStore: string): Promise<any> => {
 }
 
 const updateCacheData = async (data, storageKey: string, key) => {
-  const { request, storage } = await executeTransaction(storageKey, 'storage'); 
+  const { request, storage } = await executeTransaction(NAME_OBJECT_STORE, storageKey); 
   const storedData = request.result?.data || [];
   const newData = storedData.map(item => {
-    const match = String(item[key]) === String(data[key])
+    const match = String(item.id) === String(data[key])
     return match ? data : item;
   })
   storage.put(
@@ -257,8 +270,7 @@ const getOfflineSetting = async (): Promise<boolean | null> => {
   try {
     const SITE_SETTINGS = 'qsite.settings'
     const SETTING = 'isite::offline'
-    const OBJECT_STORE = 'storage'
-    const { request } = await executeTransaction(SITE_SETTINGS, OBJECT_STORE);
+    const { request } = await executeTransaction(NAME_OBJECT_STORE, SITE_SETTINGS);
     const storedData = request.result?.data;
     const offlineSetting = storedData.siteSettings.find(item => item.name === SETTING);
     return Boolean(offlineSetting.value);
@@ -268,19 +280,63 @@ const getOfflineSetting = async (): Promise<boolean | null> => {
   }
 }
 
+const saveExecutedRequests = async (request, id: number, status: string) => {
+  const requestInfo = {
+    id,
+    requestData: {
+      body: await request.text(),
+      url: request.url,
+      method: request.method,
+      headers: Object.fromEntries(request.headers.entries()),
+    },
+    timestamp: new Date().valueOf(),
+    metadata: {
+      status,
+    }
+  }
+
+  const { request: requestsExecuted, storage } = await executeTransaction(
+    NAME_OBJECT_STORE,
+    KEY_REQUESTS_IN_STORAGE, 
+  )
+
+  const storedData = requestsExecuted.result?.requests || [];
+  storedData.push(requestInfo)
+  storage.put(
+    { requests: storedData, },
+    KEY_REQUESTS_IN_STORAGE
+  )
+}
+
+const updateRequestStatus = async (entry, requestStatus) => {
+  const { request: requestsExecuted, storage } = await executeTransaction(NAME_OBJECT_STORE, KEY_REQUESTS_IN_STORAGE);
+  const storedData = requestsExecuted.result?.requests || [];
+  storedData.map(async (item) => {
+    if (String(item.id) === String(entry.metadata.id)) {
+      item.metadata.status = requestStatus
+    }
+  })
+
+  storage.put(
+    { requests: storedData, },
+    KEY_REQUESTS_IN_STORAGE
+  )
+}
+
 const queue = new Queue(QUEUE_NAME, {
   onSync: async ({ queue }) => {
     let entry;
     const retryCounters = new Map<string, number>();
-    const KEY = 'apiRoutes.qramp.workOrders::offline'
-
+    
     while (entry = await queue.shiftRequest()) {
       try {
         const method = entry.request.method;
+        const apiRoute = entry.request.clone().headers.get('X-Config-Name')
+        const storageKey = `${apiRoute}::offline`
 
         if (
-          method === 'PUT' ||
-          method === 'DELETE'
+          method === methods.put ||
+          method === methods.delete
         ) {
           const newRequest = await prepareRequest(entry);
           if (newRequest) entry.request = newRequest;
@@ -288,21 +344,23 @@ const queue = new Queue(QUEUE_NAME, {
 
         const response = await fetch(entry.request);
 
-        if (method === 'PUT') {
+        if (method === methods.put) {
           const { data } = await response.json();
-          updateCacheData(data, KEY, 'id')
+          updateCacheData(data, storageKey, 'id')
         }
 
-        if (method === 'POST') {
+        if (method === methods.post) {
           const { data } = await response.json();
           if (data?.offlineId) {
-            updateCacheData(data, KEY, 'offlineId')
+            updateCacheData(data, storageKey, 'offlineId')
           }
           // Save the ID generated by the server
           // to later use it in the URL of the DELETE or PUT
           // request corresponding to the created record.
           sentPOST.set(data?.offlineId, data?.id);
         }
+
+        await updateRequestStatus(entry, status.successful)
 
         postMessage('successful');
 
@@ -318,6 +376,7 @@ const queue = new Queue(QUEUE_NAME, {
           await queue.unshiftRequest(entry);
         } else {
           retryCounters.delete(entry.request.url);
+          await updateRequestStatus(entry, status.failed)
         }
 
         console.error('Error sending request', err);
@@ -330,9 +389,9 @@ const queue = new Queue(QUEUE_NAME, {
 
 self.addEventListener('fetch', (event: any) => {
   const supportedMethods = [
-    'POST',
-    'PUT',
-    'DELETE'
+    methods.post,
+    methods.put,
+    methods.delete,
   ];
 
   if (!supportedMethods.includes(event.request.method)) {
@@ -351,14 +410,14 @@ self.addEventListener('fetch', (event: any) => {
 
         let requestId = null;
 
-        if (event.request.method === 'POST') {
+        if (event.request.method === methods.post) {
           const {
             attributes: { offline_id }
           } = await transformReadableStreamToObject(event.request.clone().body);
           requestPOST.set(String(offline_id), event.request.clone());
         }
 
-        if (event.request.method === 'PUT') {
+        if (event.request.method === methods.put) {
           const id = parseUrlSegment(event.request.url, 'id');
 
           if (requestPOST.has(String(id))) {
@@ -366,20 +425,25 @@ self.addEventListener('fetch', (event: any) => {
           }
         }
 
-        if (event.request.method === 'DELETE') {
+        if (event.request.method === methods.delete) {
           const id = parseUrlSegment(event.request.url, 'id');
 
           if (requestPOST.has(String(id))) {
             requestId = id;
           }
         }
+
+        const generatedID = new Date().valueOf();
 
         await queue.pushRequest({
-          request: event.request,
+          request: event.request.clone(),
           metadata: {
-            requestId
+            requestId,
+            id: generatedID, // ID to identify the request in the queue
           }
         });
+
+        await saveExecutedRequests(event.request.clone(), generatedID, status.pending)
 
         postMessage('queue-request');
       }
