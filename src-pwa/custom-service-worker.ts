@@ -220,8 +220,7 @@ const nameDB = () => {
 }
 
 const openConnectionWithIndexedDB = () => {
-  // return indexedDB.open(nameDB());
-  return indexedDB.open('localhost:8080DB');
+  return indexedDB.open(nameDB());
 }
 
 const executeTransaction = (objectStore: string, key: string): Promise<any> => {
