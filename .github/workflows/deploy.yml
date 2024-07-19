@@ -41,6 +41,7 @@ jobs:
           git -C src/modules/qdhlagione checkout quasarV2
           git -C src/modules/qramp checkout quasarV2
           git -C src/modules/qreports checkout quasarV2
+          git -C src/modules/qcrud checkout offlineV2
       - name: Build Agione
         run: quasar build -m pwa
       - name: deploy angione azure
