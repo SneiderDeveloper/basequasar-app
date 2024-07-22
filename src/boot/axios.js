@@ -104,7 +104,7 @@ export default function({ app, router, store, ssrContext }) {
 
     if (version && backendVersion) {
       //Check if the version is updated
-      if (backendVersion > version && router.currentRoute.value.name != 'app.update.app') {
+      if (backendVersion > version && (router.currentRoute.value.name &&  router.currentRoute.value.name != 'app.update.app')) {
         router.push({
           name: 'app.update.app',
           query: {
