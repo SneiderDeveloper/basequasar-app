@@ -120,9 +120,8 @@ class localCache {
 
       //Remove keys
       keysToRemove.forEach(key => {
-        const containsOffline = key.includes('::offline');
 
-        if (key !== 'requests' && !containsOffline) {
+        if (key !== 'requests') {
           LocalForage.removeItem(key)
         }
       })
