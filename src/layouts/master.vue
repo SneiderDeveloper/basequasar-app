@@ -1,5 +1,5 @@
 <template>
-  <q-layout id="layoutMaster" :view="(appConfig.mode == 'iadmin') ? 'lHh LpR lFf' : 'lHr LpR lFf'">
+  <q-layout id="layoutMaster" class="tw-bg-gray-50" :view="(appConfig.mode == 'iadmin') ? 'lHh LpR lFf' : 'lHr LpR lFf'">
     <!-- HEADER -->
     <component :is="components.header" />
 
@@ -12,11 +12,19 @@
       <bannerAlert v-bind="configBanner()" v-if="isAppOffline || isWarning" />
       <div id="routeInformationContent" v-if="appConfig.mode == 'iadmin'"
            :class="`q-hide q-md-show ${iadminTheme == 1 ? 'bg-primary' : 'bg-white'}`">
-        <div id="subContent" class="row justify-between items-center">
+        <div id="subContent" class="row justify-between items-center tw-bg-gray-50">
           <div class="row items-center">
             <!-- Back Button -->
-            <q-btn icon="fas fa-arrow-left" unelevated round color="primary" dense class="btn-small q-mr-md"
-                   @click="$helper.backHistory()">
+            <q-btn 
+              icon="fa-regular fa-arrow-left" 
+              unelevated 
+              round 
+              text-color="primary"
+              dense 
+              size="12px"
+              class="btn-small q-mr-md tw-bg-gray-100"
+              @click="$helper.backHistory()"
+            >
               <q-tooltip>{{ $tr('isite.cms.label.back') }}</q-tooltip>
             </q-btn>
             <!--Breadcrumb-->
@@ -297,7 +305,6 @@ export default {
     #subContent {
       padding: 8px 10px 8px 16px;
       border-radius: $custom-radius 0 0 0;
-      background: linear-gradient(180deg, #F1F4FA 0%, #FFFFFF 100%)
     }
   }
 
