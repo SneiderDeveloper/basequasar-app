@@ -215,7 +215,7 @@ const nameDB = () => {
 
   //Remove .com .org....
   if (hostname.length >= 2) response.pop()
-  response.includes('localhost') && response.push('8080')
+  response.includes('localhost') && response.push(':8080')
 
   return `${response.join('')}DB`
 }
