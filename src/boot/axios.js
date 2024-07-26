@@ -99,12 +99,17 @@ export default function({ app, router, store, ssrContext }) {
     }
 
     const KEY = 'api.version'
-    const backendVersion = response.headers['x-app-version']
+    const backendVersion = response.headers['x-app-version'];
     const version = await cache.get.item(KEY)
 
-    if (version && backendVersion) {
+    if (
+      typeof backendVersion === 'string' &&
+      typeof version === 'string' &&
+      version.length > 0 &&
+      backendVersion.length > 0
+     ) {
       //Check if the version is updated
-      if (backendVersion > version && (router.currentRoute.value.name &&  router.currentRoute.value.name != 'app.update.app')) {
+      if (backendVersion > version && router?.currentRoute?.value?.name != 'app.update.app') {
         router.push({
           name: 'app.update.app',
           query: {
@@ -112,7 +117,7 @@ export default function({ app, router, store, ssrContext }) {
           }
         })
       }
-    } else if (backendVersion) {
+    } else if (typeof backendVersion === 'string' && backendVersion.length > 0) {
       await cache.set(KEY, backendVersion)
     }
 
