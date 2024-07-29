@@ -314,8 +314,14 @@ const queue = new Queue(QUEUE_NAME, {
   onSync: async ({ queue }) => {
     let entry;
     const retryCounters = new Map<string, number>();
+    postMessage('synchronizing-data');
+
     
     while (entry = await queue.shiftRequest()) {
+      if (!navigator.onLine) {
+        await queue.unshiftRequest(entry); 
+        break
+      }
       try {
         const method = entry.request.method;
 
@@ -327,7 +333,7 @@ const queue = new Queue(QUEUE_NAME, {
           if (newRequest) entry.request = newRequest;
         }
 
-        const response = await fetch(entry.request);
+        const response = await fetch(entry.request.clone());
 
         if (method === methods.post) {
           const { data } = await response.json();
@@ -350,17 +356,17 @@ const queue = new Queue(QUEUE_NAME, {
 
         if (retryCounter < ATTEMPTS) {
           retryCounters.set(entry.request.url, retryCounter + 1);
-          await queue.unshiftRequest(entry);
+            await queue.unshiftRequest(entry);
         } else {
-          retryCounters.delete(entry.request.url);
           await updateRequestStatus(entry, status.failed)
+          retryCounters.delete(entry.request.url);
         }
 
         console.error('Error sending request', err);
       }
     }
 
-    postMessage('sync-data');
+    postMessage('synchronized-data');
   }
 });
 
