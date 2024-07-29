@@ -129,21 +129,6 @@ export default {
       modalForce: {
         shouldChangePassword: false
       },
-      bannerType: {
-        offline: {
-          icon: {
-            name: 'fa-regular fa-wifi-slash',
-          },
-          message: this.$tr('isite.cms.message.appOffline'),
-          classWrapper: 'tw-text-white tw-bg-gray-900',
-          action: () => eventBus.emit('toggleMasterDrawer', 'offline')
-        },
-        notification: {
-          marquee: true,
-          message: this.$store.getters['qsiteApp/getSettingValueByName']('isite::globalWarningMessage'),
-          classWrapper: 'tw-bg-yellow-400 tw-text-black tw-font-semibold',
-        }
-      }
     };
   },
   computed: {
@@ -238,7 +223,36 @@ export default {
     },
     isWarning() {
       return this.$store.getters['qsiteApp/getSettingValueByName']('isite::globalWarningMessage')
-    }
+    },
+    pendingRequests() {
+      return this.$store.state.qofflineMaster.pendingRequests
+    },
+    bannerType() {
+      return {
+        offline: {
+          icon: {
+            name: 'fa-regular fa-wifi-slash',
+          },
+          message: `
+            <span>${this.$tr('isite.cms.message.appOffline')}</span>
+            ${this.pendingRequests ? (`
+              <div class="tw-bg-yellow-300 tw-rounded-lg tw-h-full tw-ml-2 tw-p-1">
+                <span class="tw-font-semibold tw-text-black">
+                  ${this.pendingRequests} Requests in queue
+                </span>
+              </div>
+            `) : ''}
+          `,
+          classWrapper: 'tw-text-white tw-bg-gray-900',
+          action: () => eventBus.emit('toggleMasterDrawer', 'offline')
+        },
+        notification: {
+          marquee: true,
+          message: this.$store.getters['qsiteApp/getSettingValueByName']('isite::globalWarningMessage'),
+          classWrapper: 'tw-bg-yellow-400 tw-text-black tw-font-semibold',
+        }
+      }
+    },
   },
   methods: {
     init() {
