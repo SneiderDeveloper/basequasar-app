@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { eventBus } from 'src/plugins/utils';
+// import { eventBus } from 'src/plugins/utils';
 
 export default defineComponent({
   name: 'App',
