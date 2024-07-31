@@ -13,10 +13,10 @@ export default defineComponent({
     this.$q.iconSet.arrow.dropdown = 'fa fa-caret-down';
     this.$q.iconSet.expansionItem.icon = 'fa fa-chevron-down';
     // Listen Service worker updates
-    eventBus.on('service-worker.update.available', () =>
-    {
-      this.$router.push({ name: 'app.update.app' });
-    });
+    // eventBus.on('service-worker.update.available', () =>
+    // {
+    //   this.$router.push({ name: 'app.update.app' });
+    // });
   }
 });
 </script>
