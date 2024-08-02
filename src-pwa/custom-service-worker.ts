@@ -12,13 +12,13 @@ declare const self: ServiceWorkerGlobalScope &
 
 import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
 // import { registerRoute } from 'workbox-routing';
-import { ExpirationPlugin } from 'workbox-expiration';
+// import { ExpirationPlugin } from 'workbox-expiration';
 // import { NetworkFirst, CacheFirst } from 'workbox-strategies';
 import { Queue } from 'workbox-background-sync';
 import { clientsClaim, setCacheNameDetails } from 'workbox-core';
+import { googleFontsCache } from 'workbox-recipes';
 
-cleanupOutdatedCaches()
-
+self.skipWaiting()
 // clientsClaim() is used so that a new Service Worker
 // takes control of existing client windows (browser tabs)
 // that are still controlled by a previous Service Worker.
@@ -31,7 +31,43 @@ setCacheNameDetails({
 })
 
 // Use with precache injection
-precacheAndRoute(self.__WB_MANIFEST);
+const wbManifest = [ ...self.__WB_MANIFEST ]
+
+const modules = [
+  'qcrud',
+  'qblog',
+  'qgamification',
+  'quser',
+  'qnotification',
+  'qform',
+  'qpage',
+  'qmenu',
+  'qsite',
+  'qfly',
+  'qramp',
+  'qsetupagione',
+  'qcargoagione',
+  'qdhlagione',
+  'qoffline',
+  'qreports'
+]
+
+const filterRoutes = (routes: any, modules: string[]) => {
+  // filtering resources to cache
+  return routes.filter(asset => {
+    if (asset.url.includes('src_modules')) {
+      return modules.some(module => asset.url.includes(module));
+    }
+    return true;
+  });
+}
+
+// Use with precache injection
+precacheAndRoute(filterRoutes(wbManifest, modules));
+
+cleanupOutdatedCaches()
+
+googleFontsCache();
 
 const requestPOST = new Map<string, Request>();
 const sentPOST = new Map<string, any>();
