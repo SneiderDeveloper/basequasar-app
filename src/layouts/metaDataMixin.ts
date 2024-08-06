@@ -7,7 +7,7 @@ function generateMetaData ()
   const siteName = this.$getSetting('core::site-name');
   const siteDescription = this.$getSetting('core::site-description');
   const iconHref = this.$store.getters['qsiteApp/getSettingMediaByName']('isite::favicon');
-  const favicon = iconHref.id ? iconHref.path : require('/public/favicon.ico');
+  const favicon = iconHref.path || require('/public/favicon.ico');
 
   return {
     title: `${this.$tr(routeTitle)} | ${siteName}`,
