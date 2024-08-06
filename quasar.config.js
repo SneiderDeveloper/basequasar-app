@@ -247,7 +247,7 @@ module.exports = configure(function(ctx) {
         orientation: 'portrait',
         background_color: '#ffffff',
         theme_color: '#28489a',
-        cons: [
+        icons: [
           {
             'src': 'icons/icon-128x128.jpg',
             'sizes': '128x128',
