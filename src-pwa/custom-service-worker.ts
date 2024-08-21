@@ -17,6 +17,7 @@ import { precacheAndRoute, cleanupOutdatedCaches } from 'workbox-precaching';
 import { Queue } from 'workbox-background-sync';
 import { clientsClaim, setCacheNameDetails } from 'workbox-core';
 import { googleFontsCache } from 'workbox-recipes';
+import moduleList from 'src/setup/modules.json';
 
 self.skipWaiting()
 // clientsClaim() is used so that a new Service Worker
@@ -33,24 +34,7 @@ setCacheNameDetails({
 // Use with precache injection
 const wbManifest = [ ...self.__WB_MANIFEST ]
 
-const modules = [
-  'qcrud',
-  'qblog',
-  'qgamification',
-  'quser',
-  'qnotification',
-  'qform',
-  'qpage',
-  'qmenu',
-  'qsite',
-  'qfly',
-  'qramp',
-  'qsetupagione',
-  'qcargoagione',
-  'qdhlagione',
-  'qoffline',
-  'qreports'
-]
+const modules = moduleList.modules;
 
 const filterRoutes = (routes: any, modules: string[]) => {
   // filtering resources to cache
@@ -347,6 +331,7 @@ const updateRequestStatus = async (entry, requestStatus) => {
 }
 
 const updateCacheData = async (response, key: string) => {
+  if (!key) return;
   try {
     const { request, storage } = await executeTransaction(NAME_OBJECT_STORE, key);
 
@@ -378,8 +363,8 @@ const queue = new Queue(QUEUE_NAME, {
       }
       try {
         const method = entry.request.method;
-        const responsePayload = await entry.request.clone().text();
-        const payload = await JSON.parse(responsePayload);
+        const body = await entry.request.clone().text();
+        const payload = await JSON.parse(body);
         const key = `${payload.attributes.api_route}::offline`
 
         if (

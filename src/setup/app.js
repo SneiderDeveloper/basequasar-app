@@ -1,5 +1,6 @@
 //Get package information
 import pjson from '../../package.json';
+import moduleList from './modules';
 //Parse domain to know from where is loading
 let tagsToParceHost = ['http://', 'https://', ':8080', ':3000', 'www.'];
 let host = window.location.href;
@@ -20,26 +21,7 @@ export default {
     availables: ['en-us', 'es']
   },
   //Modules
-  modules: [
-    'qcrud',
-    'qblog',
-    'qgamification',
-    'qchat',
-    'quser',
-    'qnotification',
-    'qform',
-    'qpage',
-    'qmenu',
-    'qtranslation',
-    'qsite',
-    'qfly',
-    'qramp',
-    'qsetupagione',
-    'qcargoagione',
-    'qdhlagione',
-    'qoffline',
-    'qreports'
-  ],
+  modules: moduleList.modules,
   //Cache
   saveCache: {
     refresh: [
