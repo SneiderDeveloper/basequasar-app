@@ -30,7 +30,9 @@ export default async function paginateCacheOffline(fountain, search = null, page
       return Object.entries(filters).every(([key, valueFilter]) => {
         if (!(key in item)) return true
 
-        if (valueFilter === 'null' && !item[key]) return true
+        if (valueFilter === 'null') {
+          return item[key] === null;
+        }
         
         if (Array.isArray(valueFilter)) {
           return valueFilter.includes(item[key]);

@@ -177,7 +177,8 @@ export default function({ app, router, store, ssrContext }) {
           default:
             if (
               error.response.data &&
-              error.response.data.messages
+              error.response.data.messages &&
+              status != 404
             ) showMessages(error.response.data.messages);
             break;
         }
