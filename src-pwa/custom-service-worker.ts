@@ -69,7 +69,7 @@ const methods = {
 const NAME_OBJECT_STORE = 'storage';
 const KEY_REQUESTS_IN_STORAGE = 'requests';
 const SYNC_EVENT_TRIGGER_MESSAGE_NAME = 'trigger-sync-event';
-const SYNC_EVENT_TIMEOUT = 2500;
+const SYNC_EVENT_TIMEOUT = 5000;
 let setTimeoutId = null;
 // const CACHE_NAME = 'runtime-cache';
 
