@@ -34,13 +34,7 @@ jobs:
         run: |
           git submodule update --init --remote
           git submodule foreach --recursive git fetch
-          git submodule foreach --recursive git checkout staging
-          git -C src/modules/qcargoagione checkout quasarV2
-          git -C src/modules/qsetupagione checkout quasarV2
-          git -C src/modules/qfly checkout quasarV2
-          git -C src/modules/qdhlagione checkout quasarV2
-          git -C src/modules/qramp checkout quasarV2
-          git -C src/modules/qreports checkout quasarV2 
+          git submodule foreach --recursive git checkout staging 
       - name: Build Agione
         run: quasar build -m pwa
       - name: deploy angione azure
