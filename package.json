@@ -55,7 +55,7 @@
     "vuex": "^4.0.1",
     "xlsx": "^0.18.5",
     "echarts": "^5.5.1",
-    "vue-echarts": "^7.0.3",
+    "vue-echarts": "^7.0.3"
   },
   "devDependencies": {
     "@quasar/app-webpack": "^3.9.2",
