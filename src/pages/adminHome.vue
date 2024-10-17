@@ -4,8 +4,8 @@
     <div class="q-mb-md">
       <page-actions 
         :title="$tr($route.meta.title)" 
-        :excludeActions="['refresh']" 
         :tour-name="tourName"
+        :excludeActions="[]" 
         @toggleDynamicFilterModal="toggleDynamicFilterModal"
         :dynamicFilter="dynamicFilter"
         :dynamicFilterValues="getDynamicFilterValues"
@@ -13,7 +13,7 @@
       />
     </div>
     <dynamicFilter
-      v-if="dynamicFilter"
+      v-if="showDynamicFilters"
       :systemName="systemName"
       :modelValue="showDynamicFilterModal"
       :filters="dynamicFilter"
@@ -59,7 +59,7 @@
 import { markRaw } from 'vue';
 import dynamicFilter from 'src/modules/qsite/_components/master/dynamicFilter'
 import dashboardRenderer from 'src/modules/qsite/_components/master/dashboardRenderer'
-// import service from 'src/modules/qsite/_components/master/dashboardRenderer/services.ts'
+import service from 'src/modules/qsite/_components/master/dashboardRenderer/services.ts'
 
 export default {
   created() {
@@ -71,6 +71,9 @@ export default {
   },
   mounted() {
     this.$nextTick(async function() {
+      const configName = `config.filters`;
+      const filters = await service.getConfig(configName, true);
+      this.dynamicFilter = filters.Isite
       setTimeout(() => {
         this.loading = false;
         this.setQuickCards();
@@ -88,139 +91,7 @@ export default {
       tourName: this.$q.platform.is.desktop ? 'admin_home_tour' : 'admin_home_tour_mobile',
       dynamicFilterValues: {},
       dynamicFilterSummary: {},
-      dynamicFilter: {
-        date: {
-          value: {},
-          type: 'dateRange',
-          quickFilter: false,
-          props: {
-            label: "Scheduled date",
-            field: 'schedule_date_local',
-          },
-        },
-        comparisonDate: {
-          value: {},
-          type: 'dateRange',
-          props: {
-            label: "Comparison date",
-            field: 'schedule_date_local',
-          },
-        },
-        customerId: {
-          value: null,
-          type: 'select',
-          quickFilter: false,
-          loadOptions: {
-            apiRoute: 'apiRoutes.qramp.setupCustomers',
-            select: { 'label': 'customerName', 'id': 'id' },
-            requestParams: {
-              filter: {
-                companyId: [30,33,34],
-              },
-            },
-          },
-          props: {
-            label: 'Customer',
-            'clearable': true
-          },
-        },
-        contractId: {
-          value: null,
-          type: 'select',
-          quickFilter: false,
-          loadOptions: {
-            apiRoute: 'apiRoutes.qramp.setupContracts',
-            select: { 'label': 'contractName', 'id': 'id' },
-            requestParams: {
-              filter: {
-                contractStatusId: 1,
-                businessUnitId: 8
-              },
-            },
-          },
-          props: {
-            label: 'Contract',
-            'clearable': true,
-          },
-        },
-        statusId: {
-          value: null,
-          type: 'select',
-          quickFilter: false,
-          loadOptions: {
-            apiRoute: 'apiRoutes.qramp.workOrderStatuses',
-            select: { 'label': 'statusName', 'id': 'id' },
-            requestParams: {
-              filter: {
-                companyId: [30,33,34],
-              },
-            },
-          },
-          props: {
-            label: 'Status',
-            'clearable': true
-          },
-        },
-        stationId: {
-          value: null,
-          type: 'select',
-          loadOptions: {
-            apiRoute: 'apiRoutes.qsetupagione.setupStations',
-            select: { 'label': 'fullName', 'id': 'id' },
-            requestParams: {
-              filter: {
-                companyId: [30,33,34],
-              },
-            },
-          },
-          props: {
-            label: 'Station',
-            'clearable': true
-          },
-        },
-        adHoc: {
-          value: null,
-          type: 'select',
-          props: {
-            label: 'Ad Hoc',
-            clearable: true,
-            options: [
-              { label: this.$tr('isite.cms.label.yes'), value: true, },
-              { label: this.$tr('isite.cms.label.no'), value: false, },
-            ],
-          },
-        },
-        operationTypeId: {
-          value: null,
-          type: 'select',
-          props: {
-            label: 'Operation Type',
-            clearable: true,
-            color: "primary"
-          },
-          loadOptions: {
-            apiRoute: 'apiRoutes.qramp.operationTypes',
-            select: { label: 'operationName', id: 'id' },
-            requestParams: { filter: { companyId: [30,33,34] } },
-          }
-        },
-        type: {
-          value: [],
-          type: 'select',
-          props: {
-            label: 'Work Order Types',
-            multiple: true,
-            useChips: true,
-            clearable: true,
-            color: "primary",
-            options: [
-              {label: 'Flight', value: 1},
-              {label: 'Non flight', value: 2},
-            ]
-          },
-        },
-        businessUnitId: { value: 8 },
-      },
+      dynamicFilter: {},
       systemName: 'ramp.passenger-work-orders',
       showDynamicFilterModal: false,
     };
@@ -229,6 +100,9 @@ export default {
     getDynamicFilterValues() {
       return this.dynamicFilterValues;
     },
+    showDynamicFilters() {
+      return Object.keys(this.dynamicFilter).length;
+    }
   },
   methods: {
     async setQuickCards() {
