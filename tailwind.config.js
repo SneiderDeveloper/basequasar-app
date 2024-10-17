@@ -24,10 +24,18 @@ Object.keys(colors).forEach((colorKey) => {
   }
 });
 
+const colClasses = [
+  'tw-col-span-full',
+  ...Array.from({ length: 12 }, (_, i) => `tw-col-span-${i + 1}`),
+  ...Array.from({ length: 12 }, (_, i) => `md:tw-col-span-${i + 1}`),
+  ...Array.from({ length: 12 }, (_, i) => `tw-col-start-${i + 1}`),
+  ...Array.from({ length: 12 }, (_, i) => `tw-col-end-${i + 1}`)
+];
+
 module.exports = {
   prefix: 'tw-',
   content: ["./src/**/*.{html,js,ts,vue}"],
-  safelist: [...dynamicClasses],
+  safelist: [...dynamicClasses, ...colClasses],
   theme: {
     extend: {
       colors: {}
