@@ -24,6 +24,7 @@
     />
 
     <dashboardRenderer
+      v-if="showDynamicFilters"
       :dynamicFilterValues="getDynamicFilterValues"
       :configName="configName"
     />
