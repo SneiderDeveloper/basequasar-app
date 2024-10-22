@@ -24,7 +24,7 @@
     />
 
     <dashboardRenderer
-      v-if="showDynamicFilters"
+      v-if="showDashboard"
       :dynamicFilterValues="getDynamicFilterValues"
       :configName="configName"
     />
@@ -39,7 +39,7 @@
       <div class="row q-col-gutter-x-md">
         <!-- QuickCards -->
         <div id="quickCardsContent" class="col-12">
-          <div class="row q-col-gutter-x-md">
+          <div class="row q-col-gutter-md">
             <div v-for="(groupQuickCard, key) in quickCards" :key="key" class="col-12 col-lg-6">
               <div class="row q-col-gutter-y-md full-width">
                 <div v-for="(item, keyItem) in groupQuickCard" :key="keyItem" class="col-12">
@@ -72,9 +72,7 @@ export default {
   },
   mounted() {
     this.$nextTick(async function() {
-      const configName = `config.filters`;
-      const filters = await service.getConfig(configName, true);
-      this.dynamicFilter = filters.Isite
+      await this.getFilters();
       setTimeout(() => {
         this.loading = false;
         this.setQuickCards();
@@ -84,7 +82,7 @@ export default {
   },
   data() {
     return {
-      // configName: `config.dashboard.quickCards`,
+      showDashboard: false,
       configName: `ramp.config.dashboard.quickCards`,
       testSchedule: false,
       loading: false,
@@ -136,6 +134,17 @@ export default {
     updateDynamicFilterValues(filters) {
       this.dynamicFilterValues = filters;
     },
+    async getFilters() {
+      try {
+        const configName = `config.filters`;
+        const filters = await service.getConfig(configName, true);
+        if (filters?.Isite) this.dynamicFilter = filters.Isite
+      } catch (error) {
+        console.error('Error getting filters', error);
+      } finally {
+        this.showDashboard = true;
+      }
+    }
   }
 };
 </script>
