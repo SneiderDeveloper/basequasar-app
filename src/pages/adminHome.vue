@@ -5,18 +5,18 @@
       <page-actions 
         :title="$tr($route.meta.title)" 
         :tour-name="tourName"
-        :excludeActions="[]" 
+        :excludeActions="excludeActions" 
         @toggleDynamicFilterModal="toggleDynamicFilterModal"
-        :dynamicFilter="dynamicFilter"
+        :dynamicFilter="filtersModel"
         :dynamicFilterValues="getDynamicFilterValues"
         :dynamicFilterSummary="dynamicFilterSummary"
       />
     </div>
     <dynamicFilter
-      v-if="showDynamicFilters"
+      v-if="showDynamicFilters && dashboardPermissions"
       :systemName="systemName"
       :modelValue="showDynamicFilterModal"
-      :filters="dynamicFilter"
+      :filters="filtersModel"
       @showModal="showDynamicFilterModal = true"
       @hideModal="showDynamicFilterModal = false"
       @update:modelValue="filters => updateDynamicFilterValues(filters)"
@@ -24,7 +24,7 @@
     />
 
     <dashboardRenderer
-      v-if="showDashboard"
+      v-if="showDashboard && dashboardPermissions"
       :dynamicFilterValues="getDynamicFilterValues"
       :configName="configName"
     />
@@ -72,7 +72,10 @@ export default {
   },
   mounted() {
     this.$nextTick(async function() {
-      await this.getFilters();
+      if (this.dashboardPermissions) {
+        await this.getFilters();
+        this.excludeActions = []
+      }
       setTimeout(() => {
         this.loading = false;
         this.setQuickCards();
@@ -83,6 +86,7 @@ export default {
   data() {
     return {
       showDashboard: false,
+      excludeActions: ['refresh', 'filter'],
       configName: `ramp.config.dashboard.quickCards`,
       testSchedule: false,
       loading: false,
@@ -90,7 +94,7 @@ export default {
       tourName: this.$q.platform.is.desktop ? 'admin_home_tour' : 'admin_home_tour_mobile',
       dynamicFilterValues: {},
       dynamicFilterSummary: {},
-      dynamicFilter: {},
+      filtersModel: {},
       systemName: 'ramp.passenger-work-orders',
       showDynamicFilterModal: false,
     };
@@ -100,7 +104,10 @@ export default {
       return this.dynamicFilterValues;
     },
     showDynamicFilters() {
-      return Object.keys(this.dynamicFilter).length;
+      return Object.keys(this.filtersModel).length;
+    },
+    dashboardPermissions() {
+      return this.$hasAccess('isite.dashboard.index');
     }
   },
   methods: {
@@ -138,11 +145,13 @@ export default {
       try {
         const configName = `config.filters`;
         const filters = await service.getConfig(configName, true);
-        if (filters?.Isite) this.dynamicFilter = filters.Isite
+        if (filters?.Isite) this.filtersModel = filters.Isite
       } catch (error) {
         console.error('Error getting filters', error);
       } finally {
-        this.showDashboard = true;
+        setTimeout(() => {
+          if (this.dynamicFilterValues) this.showDashboard = true;
+        }, 900);
       }
     }
   }
