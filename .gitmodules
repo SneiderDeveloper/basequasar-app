@@ -115,4 +115,4 @@
 	url = https://github.com/imagina/qwebhook.git
 [submodule "src/modules/quickbase"]
 	path = src/modules/quickbase
-	url = https://github.com/agionedev/quickbase
+	url = https://github.com/agionedev/quickbase.git
