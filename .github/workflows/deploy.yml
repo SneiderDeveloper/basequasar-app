@@ -37,7 +37,6 @@ jobs:
           git submodule foreach --recursive git checkout staging 
           git -C src/modules/qcrud checkout dashboard
           git -C src/modules/qsite checkout dashboard
-          git -C src/modules/qramp checkout dashboard
       - name: Build Agione
         run: quasar build -m pwa
       - name: deploy angione azure
