@@ -9,8 +9,8 @@ let loadFrom = host.split('/')[1];
 
 export default {
   //baseUrl: 'https://app-agione-stag-use2-01.azurewebsites.net',
-  //baseUrl: 'https://app-agione-stag-v8-use3-01.azurewebsites.net',
-  baseUrl: 'https://localhost:7116',
+  baseUrl: 'https://app-agione-stag-v8-use3-01.azurewebsites.net',
+  //baseUrl: 'https://localhost:7116',
   version: pjson.version,//Package version
   mode: (loadFrom && (['iadmin', 'ipanel'].indexOf(loadFrom) != -1)) ? loadFrom : 'iadmin',//Define load mode
   validateModeAccess: true,//Define if validate app mode access
