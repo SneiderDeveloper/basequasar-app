@@ -26,7 +26,10 @@ class Remember {
 
       //Validate if was expired
       if (responseData && responseData.expiresIn) {
-        if (currentDateInSeconds >= responseData.expiresIn) responseData = false
+        if (currentDateInSeconds >= responseData.expiresIn) {
+          if (navigator.onLine) await cache.remove(params.key)
+          responseData = false
+        }
       } else responseData = false
 
       //Request data
