@@ -18,10 +18,10 @@ class Remember {
   /*Return data in cache*/
   async(params = {}) {
     return new Promise(async (resolve, reject) => {
-      params = {key: false, seconds: (3600 * 3), callBack: false, refresh: false, inCache: false, ...params}//Validate params
-      if (params.refresh) cache.remove(params.key)//Remove data from cache
+      params = {key: false, seconds: (3600 * 3), callBack: false, refresh: false, ...params}//Validate params
+      let cacheData = await cache.get.item(params.key)//Get data from 
+      let responseData = params.refresh ? null : cacheData//Get data from
       let currentDateInSeconds = (new Date().getTime() / 1000)//Current date in seconds
-      let responseData = params.refresh && params.inCache ? false : await cache.get.item(params.key)//Get data from cache
       let dataError = false //To errors
 
       //Validate if was expired
@@ -34,14 +34,14 @@ class Remember {
         //Do callback
         await params.callBack().then(async response => {
           //Transform response data
-          if (!dataError)
+          if (!dataError){
             responseData = {
               data: response.data.data || response.data,
               meta: response.data.meta || {},
               status: response.status,
               expiresIn: (currentDateInSeconds += params.seconds)
             }
-          else
+          }else
             responseData = {
               data: dataError.data,
               status: dataError.status,
@@ -53,6 +53,7 @@ class Remember {
           }
         }).catch(error => {
           dataError = error
+          if(!navigator.onLine) responseData = cacheData
         })
       }
 
