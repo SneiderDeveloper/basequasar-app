@@ -1,6 +1,9 @@
 name: playwright-tests
 
-on: workflow_dispatch
+on:
+  push:
+    branches:
+      - testing
 
 jobs:
   test:
