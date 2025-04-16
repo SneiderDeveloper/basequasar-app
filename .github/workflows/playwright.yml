@@ -41,4 +41,4 @@ jobs:
       - name: Run Playwright tests for setup
         run: npx playwright test --project setup
       - name: Run Playwright tests for chromium
-        run: npx playwright test --project chromium
+        run: npx playwright test --project chromium --debug
