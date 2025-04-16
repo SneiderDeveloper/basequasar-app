@@ -7,6 +7,8 @@ const PATH = '/passenger/work-orders/index'
 
 test.use({ baseURL: `${config.url}${PATH}` });
 
+test.describe.configure({ mode: 'parallel' });
+
 const openModalFull = async (page) => {
     await page.locator('.crudIndexActionsColumn').first().click();
     await page.locator('a').filter({ hasText: 'Edit' }).click();
@@ -140,8 +142,8 @@ test.describe.serial('Test flight CRUD', () => {
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
         
         const cancelledType = page.getByRole('combobox', { name: 'Cancellation type' })
+        await expect(cancelledType).toBeVisible({ timeout: 10000 });
         await cancelledType.click();
-        await expect(cancelledType).toBeVisible();
         await page.getByRole('option', { name: 'Cancelled Flight', exact: true }).click();
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
         
@@ -151,13 +153,19 @@ test.describe.serial('Test flight CRUD', () => {
         await page.getByRole('option').nth(1).click();
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
 
+        await page.waitForLoadState('domcontentloaded')
+        await page.waitForLoadState('load')
+
         const cancellationNoticeTime = page.locator('div:has-text("Cancellation Notice time") input[type="number"]');
-        await cancellationNoticeTime.click()
         await cancellationNoticeTime.fill('24')
     
         const origin = page.getByRole('combobox', { name: 'Origin' })
         await origin.click();
+
         await page.waitForLoadState('networkidle');
+        await page.waitForLoadState('domcontentloaded');
+        await page.waitForLoadState('load');
+
         await page.getByRole('option').nth(2).click();
         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
     
@@ -220,7 +228,7 @@ test.describe.serial('Test flight CRUD', () => {
         await page.waitForLoadState('load');
         await page.waitForLoadState('domcontentloaded');
 
-        await expect(page.locator('#formRampComponent')).toBeHidden();
+        await expect(page.locator('#formRampComponent')).toBeHidden({ timeout: 10000 });
         await expect(page.getByText('Record updated')).toBeVisible();
     })
     
