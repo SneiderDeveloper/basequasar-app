@@ -101,7 +101,6 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await waitForPageToBeReady({ page });
 
         const sta = page.locator('label').getByPlaceholder('HH:mm', { exact: true });
-        await sta.waitFor({ state: 'visible' });
         await sta.click();
         await sta.fill(moment().format('HH:mm'));
         await page.getByPlaceholder('MM/DD/YYYY HH:mm').fill(moment().add(20, 'minute').format('MM/DD/YYYY HH:mm'));
