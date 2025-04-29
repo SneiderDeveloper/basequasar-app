@@ -57,13 +57,13 @@ jobs:
       - name: Run Playwright tests passenger labor work order
         run: npx playwright test passenger-labor-work-order.spec.ts --trace on
       - name: Run Playwright tests passenger schedule
-        run: npx playwright test passenger-schedule.spec.ts --trace on --workers 4
+        run: npx playwright test passenger-schedule.spec.ts --trace on --workers 3
       - name: Run Playwright tests passenger work order
-        run: npx playwright test passenger-work-order.spec.ts --trace on --workers 4
+        run: npx playwright test passenger-work-order.spec.ts --trace on --workers 3
       - name: Run Playwright tests ramp schedule
-        run: npx playwright test ramp-schedule.spec.ts --trace on --workers 4
+        run: npx playwright test ramp-schedule.spec.ts --trace on --workers 3
       - name: Run Playwright tests ramp work order
-        run: npx playwright test ramp-work-order.spec.ts --trace on --workers 4
+        run: npx playwright test ramp-work-order.spec.ts --trace on --workers 3
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
