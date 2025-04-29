@@ -95,12 +95,12 @@ test.describe.serial('Testing the schedule CRUD', () => {
         await page.getByText('Create Flight').click();
         await page.getByLabel('*Flight number').fill('TEST-00');
 
-        await page.getByLabel('*Operation').fill('Ferry Originate');
-        await page.getByRole('option', { name: 'Ferry Originate' }).click();
+        await page.getByLabel('*Operation').click();
+        await page.getByRole('option').first().click();
 
         await waitForPageToBeReady({ page });
 
-        const sta = page.getByPlaceholder('HH:mm', { exact: true });
+        const sta = page.locator('label').getByPlaceholder('HH:mm', { exact: true });
         await sta.waitFor({ state: 'visible' });
         await sta.click();
         await sta.fill(moment().format('HH:mm'));
