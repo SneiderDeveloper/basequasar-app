@@ -10,8 +10,10 @@ test.use({ baseURL: `${config.url}${PATH}` });
 test.describe.configure({ mode: 'parallel' });
 
 const openModalFull = async (page) => {
+    await waitForPageToBeReady({ page });
     await page.locator('.crudIndexActionsColumn').first().click();
     await page.locator('a').filter({ hasText: 'Edit' }).click();
+    await waitForPageToBeReady({ page });
 }
 
 const deleteWO = async (page) => {
@@ -28,7 +30,7 @@ const deleteWO = async (page) => {
 test('Check the display of actions and filter fields', async ({ page }) => {
     await page.locator('#innerLoadingMaster').waitFor({ state: 'hidden' });
     await waitForPageToBeReady({ page });
-    await expect(page.getByLabel('Expand "New"')).toBeVisible({ timeout: 20000 });
+    await expect(page.getByTestId('btn-dropdown-New-1')).toBeVisible({ timeout: 20000 });
     await expect(page.locator('div:nth-child(4) > .q-btn')).toBeVisible();
     await expect(page.locator('div:nth-child(5) > .q-btn')).toBeVisible();
     await expect(page.locator('#filter-button-crud')).toBeVisible();
@@ -42,6 +44,8 @@ test('Check the display of actions and filter fields', async ({ page }) => {
 
 test('Verify section titles', async ({ page }) => {
     await openModalFull(page);
+
+    await waitForPageToBeReady({ page });
     
     await expect(page.getByText('Flight', { exact: true })).toBeVisible();
     await expect(page.getByText('Services')).toBeVisible();
@@ -51,7 +55,8 @@ test('Verify section titles', async ({ page }) => {
 
 test.describe.serial('Test flight CRUD', () => {
     test('Check visibility of fields in the creation modal and create a work order', async ({ page }) => {
-        await page.getByLabel('Expand "New"').click();
+        await waitForPageToBeReady({ page });
+        await page.getByTestId('btn-dropdown-New-1').click();
         await page.getByText('Create Flight').click();
         await expect(page.getByText('New Work Order')).toBeVisible();
         await expect(page.getByRole('combobox', { name: '*Customer' })).toBeVisible();
@@ -188,13 +193,21 @@ test.describe.serial('Test flight CRUD', () => {
         await page.getByTestId('dynamicField-outboundScheduledDeparture').getByPlaceholder('MM/DD/YYYY HH:mm').click();
         await page.getByTestId('dynamicField-outboundScheduledDeparture').getByPlaceholder('MM/DD/YYYY HH:mm').fill(tomorrow);
     
-        await page.getByLabel('Inbound Gate Arrival').click();
-        await page.getByLabel('Inbound Gate Arrival').fill('02');
-        await page.getByLabel('Outbound Gate Departure').click();
-        await page.getByLabel('Outbound Gate Departure').fill('04');
+        const inboundGateArrival = page.getByLabel('Inbound Gate Arrival')
+        await inboundGateArrival.click()
+        await inboundGateArrival.fill('02')
+
+        const outboundGateDeparture = page.getByLabel('Outbound Gate Departure')
+        await outboundGateDeparture.click()
+        await outboundGateDeparture.fill('04')
     
-        await page.getByTestId('dynamicField-inboundBlockIn').getByPlaceholder('MM/DD/YYYY HH:mm').fill(yesterday);
-        await page.getByTestId('dynamicField-outboundBlockOut').getByPlaceholder('MM/DD/YYYY HH:mm').fill(today);
+        const inboundBlockIn = page.getByTestId('dynamicField-inboundBlockIn');
+        await inboundBlockIn.click();
+        await inboundBlockIn.locator('input').fill(yesterday);
+
+        const outboundBlockOut = page.getByTestId('dynamicField-outboundBlockOut')
+        await outboundBlockOut.click();
+        await outboundBlockOut.locator('input').fill(today);
     
         await expect(page.getByText('Difference (hours):')).toBeVisible();
     
@@ -226,9 +239,7 @@ test.describe.serial('Test flight CRUD', () => {
     
         await page.getByRole('button', { name: 'Close' }).click();
 
-        await page.waitForLoadState('networkidle');
-        await page.waitForLoadState('load');
-        await page.waitForLoadState('domcontentloaded');
+        await waitForPageToBeReady({ page });
 
         await expect(page.locator('#formRampComponent')).toBeHidden({ timeout: 10000 });
         await expect(page.getByText('Record updated')).toBeVisible();
@@ -241,7 +252,7 @@ test.describe.serial('Test flight CRUD', () => {
 
 test.describe('Testing feature non-flight work order', () => {
     test('Testing creating a non-flight from "Additional Flight Services"', async ({ page }) => {
-        await page.getByLabel('Expand "New"').click();
+        await page.getByTestId('btn-dropdown-New-1').click();
         await expect(page.getByText('Create Non Flight')).toBeVisible();
         await page.getByText('Create Non Flight').click();
         await expect(page.getByText('Create non-flight')).toBeVisible();
@@ -274,7 +285,7 @@ test.describe('Testing feature non-flight work order', () => {
 
     test.describe.serial('Test non-flight CRUD', () => {
         test('Testing creating a non-flight from "Non Flight Services"', async ({ page }) => {
-            await page.getByLabel('Expand "New"').click();
+            await page.getByTestId('btn-dropdown-New-1').click();
             await page.getByText('Create Non Flight').click();
             await page.getByRole('button', { name: 'Non Flight Services' }).click();
             await expect(page.getByLabel('*Customer/Contract')).toBeVisible();
@@ -291,6 +302,7 @@ test.describe('Testing feature non-flight work order', () => {
             await page.getByLabel('Flight Number').fill('TEST-01');
             await page.getByLabel('Assigned to').click();
             await page.getByLabel('Assigned to').fill('imagina');
+            await waitForPageToBeReady({ page });
             await page.getByRole('option', { name: 'Imagina Colombia' }).locator('div').nth(1).click({ timeout: 10000 });
             await page.getByRole('button', { name: 'Save' }).click();
             await expect(page.getByText('Update Work Order Id:')).toBeVisible({ timeout: 6000 });
@@ -299,6 +311,8 @@ test.describe('Testing feature non-flight work order', () => {
     
         test('Testing that the correct form is displayed in the "flight" section of the edit modal for a "non-flight" type Work Order', async ({ page }) => {
             await openModalFull(page);
+
+            await waitForPageToBeReady({ page });
         
             await expect(page.getByRole('combobox', { name: '*Customer' })).toBeVisible();
             await expect(page.getByLabel('*Station')).toBeVisible();
