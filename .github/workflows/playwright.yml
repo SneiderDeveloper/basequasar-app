@@ -49,7 +49,7 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Run Playwright tests for setup
-        run: npx playwright test --project setup --trace on
+        run: npx playwright test --project setup
       - name: Run Playwright tests home
         run: npx playwright test home.spec.ts --trace on
       - name: Run Playwright tests passenger fueling
