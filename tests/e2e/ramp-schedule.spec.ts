@@ -11,6 +11,7 @@ import {
     checkFilterFieldsInTheSchedule,
     checkTheExportActionInTheSchedule,
     checkActionsInTheScheduleTable,
+    waitForPageToBeReady,
 } from './common-tests'
 import { config } from '../config'
 
@@ -119,6 +120,8 @@ test.describe.serial('Testing the schedule CRUD', () => {
 
         await expect(page.locator('#kanban-card-actions').nth(2)).toBeVisible();
         await page.getByText('TEST-00/TEST-00').first().click();
+
+        await waitForPageToBeReady({ page });
 
         await page.getByTestId('dynamicField-inboundFlightNumber').getByRole('button').click();
         await page.getByTestId('dynamicField-inboundFlightNumber').locator('input').fill('TEST-01');
