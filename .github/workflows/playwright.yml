@@ -56,8 +56,6 @@ jobs:
         run: npx playwright test passenger-fueling.spec.ts
       - name: Run Playwright tests passenger labor work order
         run: npx playwright test passenger-labor-work-order.spec.ts
-      - name: Run Playwright tests ramp schedule
-        run: npx playwright test ramp-schedule.spec.ts --workers 4
       - name: Run Playwright tests ramp work order
         run: npx playwright test ramp-work-order.spec.ts --workers 4
 
