@@ -10,6 +10,7 @@ import {
     editScheduleInTable,
     checkFilterFieldsInTheSchedule,
     checkActionsInTheScheduleTable,
+    waitForPageToBeReady,
 } from './common-tests'
 import { config } from '../config'
 
@@ -20,13 +21,12 @@ test.use({ baseURL: `${config.url}${PATH}` });
 test.describe.configure({ mode: 'parallel' });
 
 const selectStation = async (page) => {
+    await waitForPageToBeReady({ page });
     await page.getByLabel('Station').click();
     await page.getByRole('option').first().click();
     await expect(page.getByRole('button', { name: 'filters' })).toBeVisible();
     await page.getByRole('button', { name: 'filters' }).click();
-    await page.waitForLoadState('networkidle')
-    await page.waitForLoadState('load')
-    await page.waitForLoadState('domcontentloaded')
+    await waitForPageToBeReady({ page });
 }
 
 const openModal = async (page) => {
@@ -35,6 +35,7 @@ const openModal = async (page) => {
 }
 
 test('Testing the station selection modal in the "schedule"', async ({ page }) => {
+    await waitForPageToBeReady({ page });
     await expect(page.locator('#masterModalContent')).toBeVisible({ timeout: 20000 });
     await expect(page.getByText('Filter schedule')).toBeVisible();
     await expect(page.getByText('You must first select a')).toBeVisible();

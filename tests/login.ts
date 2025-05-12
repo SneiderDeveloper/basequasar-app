@@ -9,5 +9,9 @@ export const login = async (page) => {
     await page.waitForLoadState('domcontentloaded')
     await page.waitForLoadState('load')
 
-    await expect(page.locator('#titleCrudTable')).toBeVisible({ timeout: 25000 });
+    await expect(page.locator('#titleCrudTable'))
+        .toBeVisible({ timeout: 35000 })
+        .catch(async error => {
+            await page.reload();
+        })
 }

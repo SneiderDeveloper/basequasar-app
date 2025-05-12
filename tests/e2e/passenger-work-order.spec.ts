@@ -1,6 +1,6 @@
 import { test, expect } from '../shared-context'
 import moment from 'moment-timezone';
-import { deleteWorkOrder } from './common-tests'
+import { deleteWorkOrder, waitForPageToBeReady } from './common-tests'
 import { config } from '../config'
 
 const PATH = '/passenger/work-orders/index'
@@ -10,8 +10,10 @@ test.use({ baseURL: `${config.url}${PATH}` });
 test.describe.configure({ mode: 'parallel' });
 
 const openModalFull = async (page) => {
+    await waitForPageToBeReady({ page });
     await page.locator('.crudIndexActionsColumn').first().click();
     await page.locator('a').filter({ hasText: 'Edit' }).click();
+    await waitForPageToBeReady({ page });
 }
 
 const deleteWO = async (page) => {
@@ -27,7 +29,8 @@ const deleteWO = async (page) => {
 
 test('Check the display of actions and filter fields', async ({ page }) => {
     await page.locator('#innerLoadingMaster').waitFor({ state: 'hidden' });
-    await expect(page.getByLabel('Expand "New"')).toBeVisible({ timeout: 20000 });
+    await waitForPageToBeReady({ page });
+    await expect(page.getByTestId('btn-dropdown-New-1')).toBeVisible({ timeout: 20000 });
     await expect(page.locator('div:nth-child(4) > .q-btn')).toBeVisible();
     await expect(page.locator('div:nth-child(5) > .q-btn')).toBeVisible();
     await expect(page.locator('#filter-button-crud')).toBeVisible();
@@ -41,6 +44,8 @@ test('Check the display of actions and filter fields', async ({ page }) => {
 
 test('Verify section titles', async ({ page }) => {
     await openModalFull(page);
+
+    await waitForPageToBeReady({ page });
     
     await expect(page.getByText('Flight', { exact: true })).toBeVisible();
     await expect(page.getByText('Services')).toBeVisible();

@@ -11,6 +11,7 @@ import {
     checkFilterFieldsInTheSchedule,
     checkTheExportActionInTheSchedule,
     checkActionsInTheScheduleTable,
+    waitForPageToBeReady,
 } from './common-tests'
 import { config } from '../config'
 
