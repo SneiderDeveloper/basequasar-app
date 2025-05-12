@@ -66,26 +66,26 @@ jobs:
           path: playwright-report/
           retention-days: 5
         
-      - name: Notify Discord - Success
-        if: success()
-        run: |
-          curl -H "Content-Type: application/json" \
-            -X POST \
-            -d '{"content": "✅ **Playwright's Tests successfully completed.**"}' \
-            https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX
+      # - name: Notify Discord - Success
+      #   if: success()
+      #   run: |
+      #     curl -H "Content-Type: application/json" \
+      #       -X POST \
+      #       -d '{"content": "✅ **Playwright's Tests successfully completed.**"}' \
+      #       https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX
 
-      - name: Notify Discord - Failure
-        if: failure()
-        run: |
-          curl -H "Content-Type: application/json" \
-            -X POST \
-            -d '{"content": "❌ **Playwright Tests failed.**"}' \
-            https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX
+      # - name: Notify Discord - Failure
+      #   if: failure()
+      #   run: |
+      #     curl -H "Content-Type: application/json" \
+      #       -X POST \
+      #       -d '{"content": "❌ **Playwright Tests failed.**"}' \
+      #       https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX
 
-      - name: Notify Discord - Cancelled
-        if: cancelled()
-        run: |
-          curl -H "Content-Type: application/json" \
-            -X POST \
-            -d '{"content": "⚠️ **Playwright Tests were canceled.**"}' \
-            https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX
+      # - name: Notify Discord - Cancelled
+      #   if: cancelled()
+      #   run: |
+      #     curl -H "Content-Type: application/json" \
+      #       -X POST \
+      #       -d '{"content": "⚠️ **Playwright Tests were canceled.**"}' \
+      #       https://discord.com/api/webhooks/1343946078772264981/A9JA0M_Y8oPebpba42XBoy7vuaLf4Ks4HU20b9tDmUyPtYlRjb1Zf2vGr80STeXfKKLX
