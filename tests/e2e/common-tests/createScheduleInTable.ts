@@ -1,4 +1,5 @@
 import moment  from "moment-timezone";
+import { waitForPageToBeReady } from './waitForPageToBeReady'
 
 export const createScheduleInTable = async (page, expect) => {
     await page.getByRole('button', { name: 'Scheduler' }).click();
@@ -28,6 +29,7 @@ export const createScheduleInTable = async (page, expect) => {
     await page.getByRole('option', { name: 'Monday' }).click();
     await page.getByRole('option', { name: 'Saturday' }).click();
     await page.locator('#masterModalContent div').filter({ hasText: 'New Scheduler' }).first().click();
+    await waitForPageToBeReady({ page })
     await page.getByLabel('*Flight number').click();
     await page.getByLabel('*Flight number').fill('TEST-02');
     await page.getByLabel('* Inbound Schedule Arrival').click();
