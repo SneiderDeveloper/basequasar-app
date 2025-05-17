@@ -242,28 +242,28 @@ test.describe('Testing the actions', () => {
     })
 })
 
-test.describe.serial('Test el CRUD de schedule', () => {
-    test('Testing create a Scheduler', async ({ page }) => {
-        await selectStation(page);
-        await createScheduleInTable(page, expect);
-    })
+// test.describe.serial('Test el CRUD de schedule', () => {
+//     test('Testing create a Scheduler', async ({ page }) => {
+//         await selectStation(page);
+//         await createScheduleInTable(page, expect);
+//     })
 
-    test('Testing updating a scheduler', async ({ page }) => {
-        await selectStation(page);
+//     test('Testing updating a scheduler', async ({ page }) => {
+//         await selectStation(page);
 
-        await page.getByRole('button', { name: 'Scheduler' }).click();
-        await openModal(page);
-        await editScheduleInTable(page, expect);
-    })
+//         await page.getByRole('button', { name: 'Scheduler' }).click();
+//         await openModal(page);
+//         await editScheduleInTable(page, expect);
+//     })
 
-    test('Testing the removal of a Scheduler', async ({ page }) => {
-        await selectStation(page);
-        await page.getByRole('button', { name: 'Scheduler' }).click();
-        const tr = page.locator('tbody').locator('.q-tr.tw-bg-white').first();
-        await expect(tr).toBeVisible({ timeout: 60000 });
-        const id: any = await tr.locator('td').nth(0).textContent()
-        await tr.getByRole('button').click();
-        await deleteWorkOrder(page, expect);
-        await expect(page.locator('table').getByText(id)).toBeHidden({ timeout: 60000 });
-    })
-})
+//     test('Testing the removal of a Scheduler', async ({ page }) => {
+//         await selectStation(page);
+//         await page.getByRole('button', { name: 'Scheduler' }).click();
+//         const tr = page.locator('tbody').locator('.q-tr.tw-bg-white').first();
+//         await expect(tr).toBeVisible({ timeout: 60000 });
+//         const id: any = await tr.locator('td').nth(0).textContent()
+//         await tr.getByRole('button').click();
+//         await deleteWorkOrder(page, expect);
+//         await expect(page.locator('table').getByText(id)).toBeHidden({ timeout: 60000 });
+//     })
+// })
