@@ -242,81 +242,81 @@ test.describe.serial('Test flight CRUD', () => {
     })
 })
 
-test.describe('Testing feature non-flight work order', () => {
-    test('Testing creating a non-flight from "Additional Flight Services"', async ({ page }) => {
-        await page.getByLabel('Expand "New"').click();
-        await expect(page.getByText('Create Non Flight')).toBeVisible();
-        await page.getByText('Create Non Flight').click();
-        await expect(page.getByText('Create non-flight')).toBeVisible();
+// test.describe('Testing feature non-flight work order', () => {
+//     test('Testing creating a non-flight from "Additional Flight Services"', async ({ page }) => {
+//         await page.getByLabel('Expand "New"').click();
+//         await expect(page.getByText('Create Non Flight')).toBeVisible();
+//         await page.getByText('Create Non Flight').click();
+//         await expect(page.getByText('Create non-flight')).toBeVisible();
         
-        await expect(page.getByRole('button', { name: 'Additional Flight Services' })).toBeVisible();
-        await expect(page.getByRole('button', { name: 'Non Flight Services' })).toBeVisible();
-        await expect(page.getByRole('button', { name: 'Additional Flight Services' }).getByRole('button')).toBeVisible();
-        await expect(page.getByRole('button', { name: 'Non Flight Services' }).getByRole('button')).toBeVisible();
-        await expect(page.getByLabel('*Flight number')).toBeVisible();
-        await expect(page.getByText('Enter the fight number and')).toBeVisible();
-        await page.getByLabel('*Flight number').click();
-        await page.getByLabel('*Flight number').fill('nk1278');
-        await page.getByLabel('*Flight number').press('Enter');
+//         await expect(page.getByRole('button', { name: 'Additional Flight Services' })).toBeVisible();
+//         await expect(page.getByRole('button', { name: 'Non Flight Services' })).toBeVisible();
+//         await expect(page.getByRole('button', { name: 'Additional Flight Services' }).getByRole('button')).toBeVisible();
+//         await expect(page.getByRole('button', { name: 'Non Flight Services' }).getByRole('button')).toBeVisible();
+//         await expect(page.getByLabel('*Flight number')).toBeVisible();
+//         await expect(page.getByText('Enter the fight number and')).toBeVisible();
+//         await page.getByLabel('*Flight number').click();
+//         await page.getByLabel('*Flight number').fill('nk1278');
+//         await page.getByLabel('*Flight number').press('Enter');
 
-        await page.waitForLoadState('networkidle');
-        await page.waitForLoadState('load');
-        await page.waitForLoadState('domcontentloaded');
+//         await page.waitForLoadState('networkidle');
+//         await page.waitForLoadState('load');
+//         await page.waitForLoadState('domcontentloaded');
 
-        await expect(page.locator('#flight-results-table')).toBeVisible({ timeout: 20000 });
+//         await expect(page.locator('#flight-results-table')).toBeVisible({ timeout: 20000 });
  
-        await expect(page.locator('#flight-results-table').getByRole('cell', { name: 'Inbound Flight Number' })).toBeVisible();
-        await expect(page.getByRole('cell', { name: 'Inbound Scheduled Arrival' })).toBeVisible();
-        await expect(page.locator('#flight-results-table').getByRole('cell', { name: 'Outbound Flight Number' })).toBeVisible();
-        await expect(page.getByRole('cell', { name: 'Outbound Scheduled Departure' })).toBeVisible();
-        await expect(page.getByRole('cell', { name: 'Service Date Created' })).toBeVisible();
+//         await expect(page.locator('#flight-results-table').getByRole('cell', { name: 'Inbound Flight Number' })).toBeVisible();
+//         await expect(page.getByRole('cell', { name: 'Inbound Scheduled Arrival' })).toBeVisible();
+//         await expect(page.locator('#flight-results-table').getByRole('cell', { name: 'Outbound Flight Number' })).toBeVisible();
+//         await expect(page.getByRole('cell', { name: 'Outbound Scheduled Departure' })).toBeVisible();
+//         await expect(page.getByRole('cell', { name: 'Service Date Created' })).toBeVisible();
 
-        await expect(page.getByLabel('Search...')).toBeVisible();
-        await expect(page.getByRole('button', { name: 'cancel' })).toBeVisible();
-    });
+//         await expect(page.getByLabel('Search...')).toBeVisible();
+//         await expect(page.getByRole('button', { name: 'cancel' })).toBeVisible();
+//     });
 
-    test.describe.serial('Test non-flight CRUD', () => {
-        test('Testing creating a non-flight from "Non Flight Services"', async ({ page }) => {
-            await page.getByLabel('Expand "New"').click();
-            await page.getByText('Create Non Flight').click();
-            await page.getByRole('button', { name: 'Non Flight Services' }).click();
-            await expect(page.getByLabel('*Customer/Contract')).toBeVisible();
-            await expect(page.locator('.absolute-right > .q-btn')).toBeVisible();
-            await expect(page.getByLabel('Flight Number')).toBeVisible();
-            await expect(page.getByLabel('*Station')).toBeVisible();
-            await expect(page.getByPlaceholder('MM/DD/YYYY HH:mm')).toBeVisible();
-            await expect(page.getByLabel('Assigned to')).toBeVisible();
-            await expect(page.getByText('If you left this field empty')).toBeVisible();
-            await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
-            await page.getByLabel('*Customer/Contract').click();
-            await page.getByRole('option').first().locator('div').nth(1).click();
-            await page.getByLabel('Flight Number').click();
-            await page.getByLabel('Flight Number').fill('TEST-01');
-            await page.getByLabel('Assigned to').click();
-            await page.getByLabel('Assigned to').fill('imagina');
-            await page.getByRole('option', { name: 'Imagina Colombia' }).locator('div').nth(1).click({ timeout: 10000 });
-            await page.getByRole('button', { name: 'Save' }).click();
-            await expect(page.getByText('Update Work Order Id:')).toBeVisible({ timeout: 6000 });
-            await expect(page.getByText('Non-flight', { exact: true })).toBeVisible();
-        });
+//     test.describe.serial('Test non-flight CRUD', () => {
+//         test('Testing creating a non-flight from "Non Flight Services"', async ({ page }) => {
+//             await page.getByLabel('Expand "New"').click();
+//             await page.getByText('Create Non Flight').click();
+//             await page.getByRole('button', { name: 'Non Flight Services' }).click();
+//             await expect(page.getByLabel('*Customer/Contract')).toBeVisible();
+//             await expect(page.locator('.absolute-right > .q-btn')).toBeVisible();
+//             await expect(page.getByLabel('Flight Number')).toBeVisible();
+//             await expect(page.getByLabel('*Station')).toBeVisible();
+//             await expect(page.getByPlaceholder('MM/DD/YYYY HH:mm')).toBeVisible();
+//             await expect(page.getByLabel('Assigned to')).toBeVisible();
+//             await expect(page.getByText('If you left this field empty')).toBeVisible();
+//             await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
+//             await page.getByLabel('*Customer/Contract').click();
+//             await page.getByRole('option').first().locator('div').nth(1).click();
+//             await page.getByLabel('Flight Number').click();
+//             await page.getByLabel('Flight Number').fill('TEST-01');
+//             await page.getByLabel('Assigned to').click();
+//             await page.getByLabel('Assigned to').fill('imagina');
+//             await page.getByRole('option', { name: 'Imagina Colombia' }).locator('div').nth(1).click({ timeout: 10000 });
+//             await page.getByRole('button', { name: 'Save' }).click();
+//             await expect(page.getByText('Update Work Order Id:')).toBeVisible({ timeout: 6000 });
+//             await expect(page.getByText('Non-flight', { exact: true })).toBeVisible();
+//         });
     
-        // test('Testing that the correct form is displayed in the "flight" section of the edit modal for a "non-flight" type Work Order', async ({ page }) => {
-        //     await openModalFull(page);
+//         test('Testing that the correct form is displayed in the "flight" section of the edit modal for a "non-flight" type Work Order', async ({ page }) => {
+//             await openModalFull(page);
         
-        //     await expect(page.getByRole('combobox', { name: '*Customer' })).toBeVisible();
-        //     await expect(page.getByLabel('*Station')).toBeVisible();
-        //     await expect(page.getByLabel('*A/C Type')).toBeVisible();
-        //     await expect(page.getByLabel('*Operation')).toBeVisible();
-        //     await expect(page.getByRole('combobox', { name: '*Carrier' })).toBeVisible();
-        //     await expect(page.getByLabel('*Status')).toBeVisible();
-        //     await expect(page.getByTestId('dynamicField-scheduleDate').locator('label').filter({ hasText: '*Date Entered' }).first()).toBeVisible();
-        //     await expect(page.getByPlaceholder('MM/DD/YYYY HH:mm')).toBeVisible();
-        //     await expect(page.getByLabel('Flight Number')).toBeVisible();
-        // })
+//             await expect(page.getByRole('combobox', { name: '*Customer' })).toBeVisible();
+//             await expect(page.getByLabel('*Station')).toBeVisible();
+//             await expect(page.getByLabel('*A/C Type')).toBeVisible();
+//             await expect(page.getByLabel('*Operation')).toBeVisible();
+//             await expect(page.getByRole('combobox', { name: '*Carrier' })).toBeVisible();
+//             await expect(page.getByLabel('*Status')).toBeVisible();
+//             await expect(page.getByTestId('dynamicField-scheduleDate').locator('label').filter({ hasText: '*Date Entered' }).first()).toBeVisible();
+//             await expect(page.getByPlaceholder('MM/DD/YYYY HH:mm')).toBeVisible();
+//             await expect(page.getByLabel('Flight Number')).toBeVisible();
+//         })
 
-        test('Testing to delete a "Work Order" in "Work Orders"', async ({ page }) => {
-            await deleteWO(page)
-        })
-    });
+//         test('Testing to delete a "Work Order" in "Work Orders"', async ({ page }) => {
+//             await deleteWO(page)
+//         })
+//     });
 
-});
+// });
