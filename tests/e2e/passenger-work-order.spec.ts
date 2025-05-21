@@ -9,6 +9,11 @@ test.use({ baseURL: `${config.url}${PATH}` });
 
 test.describe.configure({ mode: 'parallel' });
 
+const FORMAT_DATE = 'MM/DD/YYYY HH:mm';
+const today = moment().format(FORMAT_DATE);
+const tomorrow = moment().add(1, 'day').format(FORMAT_DATE);
+const yesterday = moment().subtract(1, 'day').format(FORMAT_DATE);
+
 const openModalFull = async (page) => {
     await waitForPageToBeReady({ page });
     await page.locator('.crudIndexActionsColumn').first().click();
@@ -53,202 +58,285 @@ test('Verify section titles', async ({ page }) => {
     await expect(page.getByText('Remark')).toBeVisible();
 });
 
-// test.describe.serial('Test flight CRUD', () => {
-//     test('Check visibility of fields in the creation modal and create a work order', async ({ page }) => {
-//         await waitForPageToBeReady({ page });
-//         await page.getByTestId('btn-dropdown-New-1').click();
-//         await page.getByText('Create Flight').click();
-//         await expect(page.getByText('New Work Order')).toBeVisible();
-//         await expect(page.getByRole('combobox', { name: '*Customer' })).toBeVisible();
-//         await expect(page.getByLabel('*Flight number')).toBeVisible();
-//         await expect(page.getByText('Enter the fight number and')).toBeVisible();
-//         await expect(page.getByLabel('*Station')).toBeVisible();
-//         await expect(page.getByLabel('Assigned to')).toBeVisible();
-//         await expect(page.getByText('If you left this field empty')).toBeVisible();
-//         await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
+test.describe.serial('Test flight CRUD', () => {
+    test('Check visibility of fields in the creation modal and create a work order', async ({ page }) => {
+        await waitForPageToBeReady({ page });
+        await page.getByTestId('btn-dropdown-New-1').click();
+        await page.getByText('Create Flight').click();
+        await expect(page.getByText('New Work Order')).toBeVisible();
+        await expect(page.getByRole('combobox', { name: '*Customer' })).toBeVisible();
+        await expect(page.getByLabel('*Flight number')).toBeVisible();
+        await expect(page.getByText('Enter the fight number and')).toBeVisible();
+        await expect(page.getByLabel('*Station')).toBeVisible();
+        await expect(page.getByLabel('Assigned to')).toBeVisible();
+        await expect(page.getByText('If you left this field empty')).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Save' })).toBeVisible();
     
-//         await page.getByLabel('*Customer').click();
-//         await page.getByLabel('*Customer').fill('AARK');
-//         await page.getByRole('option', { name: 'AARK (Ad Hoc)' }).click();
-//         await page.locator('#formRampComponent div').filter({ hasText: 'New Work Order' }).first().click();
+        await page.getByLabel('*Customer').click();
+        await page.getByLabel('*Customer').fill('AARK');
+        await page.getByRole('option', { name: 'AARK (Ad Hoc)' }).click();
+        await page.locator('#formRampComponent div').filter({ hasText: 'New Work Order' }).first().click();
     
-//         await page.getByLabel('*Flight number').click();
-//         await page.getByLabel('*Flight number').fill('TEST-00');
-//         await page.getByLabel('*Station').click();
-//         await page.getByLabel('*Station').fill('Austin');
-//         await page.getByRole('option', { name: 'Austin, TX (AUS)' }).click();
-//         await page.getByLabel('Assigned to').click();
-//         await page.getByLabel('Assigned to').fill('ima');
-//         await page.getByRole('option', { name: 'Imagina Colombia' }).click();
-//         await page.getByRole('button', { name: 'Save' }).click();
+        await page.getByLabel('*Flight number').click();
+        await page.getByLabel('*Flight number').fill('TEST-00');
+        await page.getByLabel('*Station').click();
+        await page.getByLabel('*Station').fill('Austin');
+        await page.getByRole('option', { name: 'Austin, TX (AUS)' }).click();
+        await page.getByLabel('Assigned to').click();
+        await page.getByLabel('Assigned to').fill('ima');
+        await page.getByRole('option', { name: 'Imagina Colombia' }).click();
+        await page.getByRole('button', { name: 'Save' }).click();
     
-//         await waitForPageToBeReady({ page });
-//         await expect(page.getByText('Error when looking for the')).not.toBeVisible();
+        await waitForPageToBeReady({ page });
+        await expect(page.getByText('Error when looking for the')).not.toBeVisible();
     
-//         await expect(page.getByText('Flight number', { exact: true })).toBeVisible({ timeout: 60000 });
-//         await expect(page.getByText('Are you sure TEST-00 is a')).toBeVisible();
-//         await expect(page.getByRole('button', { name: 'Cancel' })).toBeVisible();
-//         await expect(page.getByRole('button', { name: 'Yes' })).toBeVisible();
+        await expect(page.getByText('Flight number', { exact: true })).toBeVisible({ timeout: 60000 });
+        await expect(page.getByText('Are you sure TEST-00 is a')).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Cancel' })).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Yes' })).toBeVisible();
     
-//         await page.getByRole('button', { name: 'Yes' }).click();
-//         await page.waitForLoadState('networkidle');
+        await page.getByRole('button', { name: 'Yes' }).click();
+        await page.waitForLoadState('networkidle');
     
-//         await expect(page.getByText('What do you want to do?')).toBeVisible();
-//         await expect(page.getByRole('button', { name: 'Go out to the list' })).toBeVisible();
-//         await expect(page.getByRole('button', { name: 'Continue editing' })).toBeVisible();
-//         await expect(page.getByRole('button', { name: 'Create a new one' })).toBeVisible();
+        await expect(page.getByText('What do you want to do?')).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Go out to the list' })).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Continue editing' })).toBeVisible();
+        await expect(page.getByRole('button', { name: 'Create a new one' })).toBeVisible();
     
-//         await page.getByRole('button', { name: 'Go out to the list' }).click();
-//     })
+        await page.getByRole('button', { name: 'Go out to the list' }).click();
+    })
 
-//     // test('Check dynamic fields', async ({ page }) => {
-//     //     await openModalFull(page);
+    // test('Check dynamic fields', async ({ page }) => {
+    //     await openModalFull(page);
 
-//     //     await page.getByLabel('*Operation').click();
-//     //     await page.getByLabel('*Operation').fill('Ferry Originate');
-//     //     await page.getByRole('option', { name: 'Ferry Originate' }).click();
-//     //     await expect(page.getByLabel('*Charter Rate')).toBeVisible();
-//     //     await expect(page.getByLabel('Cancellation type')).toBeVisible();
+    //     await page.getByLabel('*Operation').click();
+    //     await page.getByLabel('*Operation').fill('Ferry Originate');
+    //     await page.getByRole('option', { name: 'Ferry Originate' }).click();
+    //     await expect(page.getByLabel('*Charter Rate')).toBeVisible();
+    //     await expect(page.getByLabel('Cancellation type')).toBeVisible();
 
-//     //     await page.getByLabel('*Operation').click();
-//     //     await page.getByLabel('*Operation').fill('Charter.Unscheduled');
-//     //     await page.getByRole('option', { name: 'Charter.Unscheduled' }).click();
-//     //     await expect(page.getByLabel('*Charter Rate')).toBeVisible();
-//     //     await expect(page.getByRole('button', { name: 'Expand', exact: true })).toBeVisible();
-//     //     await expect(page.getByLabel('Collapse', { exact: true })).toBeVisible();
+    //     await page.getByLabel('*Operation').click();
+    //     await page.getByLabel('*Operation').fill('Charter.Unscheduled');
+    //     await page.getByRole('option', { name: 'Charter.Unscheduled' }).click();
+    //     await expect(page.getByLabel('*Charter Rate')).toBeVisible();
+    //     await expect(page.getByRole('button', { name: 'Expand', exact: true })).toBeVisible();
+    //     await expect(page.getByLabel('Collapse', { exact: true })).toBeVisible();
 
-//     //     await page.getByLabel('*Operation').click();
-//     //     await page.getByLabel('*Operation').fill('Charter.TURN');
-//     //     await page.getByRole('option', { name: 'Charter.TURN' }).click();
-//     //     await expect(page.getByRole('button', { name: 'Expand', exact: true })).toBeVisible();
-//     //     await expect(page.getByLabel('Collapse', { exact: true })).toBeVisible();
-//     // })
+    //     await page.getByLabel('*Operation').click();
+    //     await page.getByLabel('*Operation').fill('Charter.TURN');
+    //     await page.getByRole('option', { name: 'Charter.TURN' }).click();
+    //     await expect(page.getByRole('button', { name: 'Expand', exact: true })).toBeVisible();
+    //     await expect(page.getByLabel('Collapse', { exact: true })).toBeVisible();
+    // })
     
-//     test('Testing updating a "Work Order" in "Work Orders"', async ({ page }) => {
-//         await openModalFull(page);
-//         const FORMAT_DATE = 'MM/DD/YYYY HH:mm';
-//         const today = moment().format(FORMAT_DATE);
-//         const tomorrow = moment().add(1, 'day').format(FORMAT_DATE);
-//         const yesterday = moment().subtract(1, 'day').format(FORMAT_DATE);
+    test('Testing updating a "Work Order" in "Work Orders"', async ({ page }) => {
+        await openModalFull(page);
 
-//         await expect(page.getByLabel('*Customer', { exact: true }).first()).toBeVisible();
-//         await expect(page.getByLabel('*Station')).toBeVisible();
-//         await expect(page.getByLabel('*Carrier')).toBeVisible();
-//         await expect(page.getByLabel('*Status')).toBeVisible();
+        await expect(page.getByLabel('*Customer', { exact: true }).first()).toBeVisible();
+        await expect(page.getByLabel('*Station')).toBeVisible();
+        await expect(page.getByLabel('*Carrier')).toBeVisible();
+        await expect(page.getByLabel('*Status')).toBeVisible();
 
-//         const acType = page.getByRole('combobox', { name: '*A/C Type' })
-//         await expect(acType).toBeVisible();
-//         await acType.click();
-//         await page.getByRole('option').nth(2).click();
-//         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
+        const acType = page.getByRole('combobox', { name: '*A/C Type' })
+        await expect(acType).toBeVisible();
+        await acType.click();
+        await page.getByRole('option').nth(2).click();
+        await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
         
-//         const operation = page.getByRole('combobox', { name: '*Operation' })
-//         await expect(operation).toBeVisible();
-//         await operation.click();
-//         await page.getByRole('option').nth(2).click();
-//         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
+        const operation = page.getByRole('combobox', { name: '*Operation' })
+        await expect(operation).toBeVisible();
+        await operation.click();
+        await waitForPageToBeReady({ page });
+        const option = page.getByRole('option').nth(2);
+        await expect(option).toBeVisible({ timeout: 10000 });
+        await option.click();
+        await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
         
-//         const cancelledType = page.getByRole('combobox', { name: 'Cancellation type' })
-//         await expect(cancelledType).toBeVisible({ timeout: 10000 });
-//         await cancelledType.click();
-//         await page.getByRole('option', { name: 'Cancelled Flight', exact: true }).click();
-//         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
+        const cancelledType = page.getByRole('combobox', { name: 'Cancellation type' })
+        await expect(cancelledType).toBeVisible({ timeout: 10000 });
+        await cancelledType.click();
+        await page.getByRole('option', { name: 'Cancelled Flight', exact: true }).click();
+        await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
         
-//         const paxOperation = page.getByRole('combobox', { name: 'Pax Operation' })
-//         await expect(paxOperation).toBeVisible();
-//         await paxOperation.click();
-//         await page.getByRole('option').nth(1).click();
-//         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
+        const paxOperation = page.getByRole('combobox', { name: 'Pax Operation' })
+        await expect(paxOperation).toBeVisible();
+        await paxOperation.click();
+        await page.getByRole('option').nth(1).click();
+        await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
 
-//         await page.waitForLoadState('domcontentloaded')
-//         await page.waitForLoadState('load')
+        await page.waitForLoadState('domcontentloaded')
+        await page.waitForLoadState('load')
 
-//         const cancellationNoticeTime = page.locator('div:has-text("Cancellation Notice time") input[type="number"]');
-//         await cancellationNoticeTime.fill('24')
+        const cancellationNoticeTime = page.locator('div:has-text("Cancellation Notice time") input[type="number"]');
+        await cancellationNoticeTime.fill('24')
     
-//         const origin = page.getByRole('combobox', { name: 'Origin' })
-//         await origin.click();
+        const origin = page.getByRole('combobox', { name: 'Origin' })
+        console.log('hidden', await origin.isHidden())
+        if (await origin.isHidden()) {
+            await page.getByRole('button', { name: 'Collapse' }).nth(1).click()
+        }
+        await origin.click();
 
-//         await page.waitForLoadState('networkidle');
-//         await page.waitForLoadState('domcontentloaded');
-//         await page.waitForLoadState('load');
+        await waitForPageToBeReady({ page });
 
-//         await page.getByRole('option').nth(2).click();
-//         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
+        await page.getByRole('option').nth(2).click();
+        await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
     
-//         await page.getByTestId('dynamicField-inboundTailNumber').getByLabel('Tail N°').click();
-//         await page.getByTestId('dynamicField-inboundTailNumber').getByLabel('Tail N°').fill('45');
+        const inboundTailNumber = page.getByTestId('dynamicField-inboundTailNumber').getByLabel('Tail N°')
+        await inboundTailNumber.click();
+        await inboundTailNumber.fill('45');
     
-//         await page.getByTestId('dynamicField-inboundScheduledArrival').getByPlaceholder('MM/DD/YYYY HH:mm').click();
-//         await page.getByTestId('dynamicField-inboundScheduledArrival').getByPlaceholder('MM/DD/YYYY HH:mm').fill(today);
+        const inboundScheduledArrival = page.getByTestId('dynamicField-inboundScheduledArrival').getByPlaceholder('MM/DD/YYYY HH:mm');
+        await inboundScheduledArrival.click();
+        await inboundScheduledArrival.fill(today);
     
-//         const destination = page.getByRole('combobox', { name: 'Destination' })
-//         await destination.click();
-//         await page.getByRole('option').nth(3).click();
-//         await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
+        const destination = page.getByRole('combobox', { name: 'Destination' })
+        await destination.click();
+        await page.getByRole('option').nth(3).click();
+        await page.locator('#formRampComponent div').filter({ hasText: 'Update Work Order Id:' }).first().click();
     
-//         await page.getByTestId('dynamicField-outboundTailNumber').getByLabel('Tail N°').click();
-//         await page.getByTestId('dynamicField-outboundTailNumber').getByLabel('Tail N°').fill('45');
+        const outboundTailNumber = page.getByTestId('dynamicField-outboundTailNumber').getByLabel('Tail N°')
+        await outboundTailNumber.click();
+        await outboundTailNumber.fill('45');
     
-//         await page.getByTestId('dynamicField-outboundScheduledDeparture').getByPlaceholder('MM/DD/YYYY HH:mm').click();
-//         await page.getByTestId('dynamicField-outboundScheduledDeparture').getByPlaceholder('MM/DD/YYYY HH:mm').fill(tomorrow);
+        const outboundScheduledDeparture = page.getByTestId('dynamicField-outboundScheduledDeparture').getByPlaceholder('MM/DD/YYYY HH:mm');
+        await outboundScheduledDeparture.click();
+        await outboundScheduledDeparture.fill(tomorrow);
     
-//         const inboundGateArrival = page.getByLabel('Inbound Gate Arrival')
-//         await inboundGateArrival.click()
-//         await inboundGateArrival.fill('02')
+        const inboundGateArrival = page.getByLabel('Inbound Gate Arrival')
+        await inboundGateArrival.click()
+        await inboundGateArrival.fill('02')
 
-//         const outboundGateDeparture = page.getByLabel('Outbound Gate Departure')
-//         await outboundGateDeparture.click()
-//         await outboundGateDeparture.fill('04')
+        const outboundGateDeparture = page.getByLabel('Outbound Gate Departure')
+        await outboundGateDeparture.click()
+        await outboundGateDeparture.fill('04')
     
-//         const inboundBlockIn = page.getByTestId('dynamicField-inboundBlockIn');
-//         await inboundBlockIn.click();
-//         await inboundBlockIn.locator('input').fill(yesterday);
+        const inboundBlockIn = page.getByTestId('dynamicField-inboundBlockIn');
+        await inboundBlockIn.click();
+        await inboundBlockIn.locator('input').fill(yesterday);
 
-//         const outboundBlockOut = page.getByTestId('dynamicField-outboundBlockOut')
-//         await outboundBlockOut.click();
-//         await outboundBlockOut.locator('input').fill(today);
+        const outboundBlockOut = page.getByTestId('dynamicField-outboundBlockOut')
+        await outboundBlockOut.click();
+        await outboundBlockOut.locator('input').fill(today);
     
-//         await expect(page.getByText('Difference (hours):')).toBeVisible();
-    
-//         await page.locator('#stepComponent div').filter({ hasText: 'Services' }).nth(2).click();
-//         await page.getByText('Cargo Man Power').click();
-//         await page.locator('.tw-flex > div:nth-child(3) > .q-btn').first().click();
-//         await page.locator('div:nth-child(2) > div > div > #dynamicFieldComponent > div > .tw-flex > div:nth-child(3) > .q-btn').first().click();
-//         await page.locator('.q-px-sm > .fa-star').first().click();
-//         await page.locator('div:nth-child(2) > .color-bg-blue-gray-custom > div > .q-px-sm > .fa-star').click();
+        await expect(page.getByText('Difference (hours):')).toBeVisible();
+
+        // Section "Services"
+        await page.locator('#stepComponent div').filter({ hasText: 'Services' }).nth(2).click();
+        await page.getByText('Cargo Man Power').click();
+        await page.locator('.tw-flex > div:nth-child(3) > .q-btn').first().click();
+        await page.locator('div:nth-child(2) > div > div > #dynamicFieldComponent > div > .tw-flex > div:nth-child(3) > .q-btn').first().click();
+        await page.locator('.q-px-sm > .fa-star').first().click();
+        await page.locator('div:nth-child(2) > .color-bg-blue-gray-custom > div > .q-px-sm > .fa-star').click();
         
-//         await expect(page.locator('button').filter({ hasText: '1' }).nth(1)).toBeVisible();
-//         await expect(page.locator('#stepComponent button').filter({ hasText: '2' })).toBeVisible();
-    
-//         await page.locator('#stepComponent div').filter({ hasText: 'Delay' }).nth(2).click();
-//         await page.getByLabel('Our delay').click();
-//         await page.getByRole('option', { name: 'Yes' }).locator('div').nth(1).click();
-//         await page.getByLabel('Delay Comment').click();
-//         await page.getByLabel('Delay Comment').fill('Delay comment');
-//         await page.getByLabel('Code').click();
-//         await page.getByRole('option').nth(1).click();
-//         await page.getByLabel('Time').click();
-//         await page.getByLabel('Time').fill('24');
-    
-//         await page.locator('#stepComponent div').filter({ hasText: 'Remark' }).nth(2).click();
-//         await page.getByLabel('Remark').click();
-//         await page.getByLabel('Remark').fill('Testing');
-//         await page.getByLabel('Safety Message').click();
-//         await page.getByLabel('Safety Message').fill('Testing');
-    
-//         await page.getByRole('button', { name: 'Close' }).click();
+        await expect(page.locator('button').filter({ hasText: '1' }).nth(1)).toBeVisible();
+        await expect(page.locator('#stepComponent button').filter({ hasText: '2' })).toBeVisible();
+        const successfulAlertCreation = page.getByText('Favorite created successfully');
+        const successfulEliminationAlert = page.getByText('Favorite deleted successfully ');
 
-//         await waitForPageToBeReady({ page });
-
-//         await expect(page.locator('#formRampComponent')).toBeHidden({ timeout: 10000 });
-//         await expect(page.getByText('Record updated')).toBeVisible();
-//     })
+        await expect(successfulAlertCreation.first().or(successfulEliminationAlert.first())).toBeVisible({ timeout: 10000 });
+        await expect(successfulAlertCreation.nth(1).or(successfulEliminationAlert.nth(1))).toBeVisible({ timeout: 10000 });
     
-//     test('Testing to delete a "Work Order" in "Work Orders"', async ({ page }) => { 
-//         await deleteWO(page)
-//     })
-// })
+        // Section "Delay"
+        await page.locator('#stepComponent div').filter({ hasText: 'Delay' }).nth(2).click();
+        await page.getByLabel('Our delay').click();
+        await page.getByRole('option', { name: 'Yes' }).locator('div').nth(1).click();
+        await page.getByLabel('Delay Comment').click();
+        await page.getByLabel('Delay Comment').fill('Delay comment');
+        await page.getByLabel('Code').click();
+        await page.getByRole('option').nth(1).click();
+        await page.getByLabel('Time').click();
+        await page.getByLabel('Time').fill('24');
+        // Se espera que la alerta se oculte por que impide seleccionar una opción en el campo "Flight type"
+        await successfulAlertCreation.first().waitFor({ state: 'hidden', timeout: 10000 });
+        await successfulAlertCreation.nth(1).waitFor({ state: 'hidden', timeout: 10000 });
+        await successfulEliminationAlert.first().waitFor({ state: 'hidden', timeout: 10000 });
+        await successfulEliminationAlert.nth(1).waitFor({ state: 'hidden', timeout: 10000 });
+        await page.getByRole('combobox', { name: 'Flight type' }).click();
+        await page.getByRole('option').first().click();
+    
+        // Section "Remark"
+        await page.locator('#stepComponent div').filter({ hasText: 'Remark' }).nth(2).click();
+        await page.getByLabel('Remark').click();
+        await page.getByLabel('Remark').fill('Testing');
+        await page.getByLabel('Safety Message').click();
+        await page.getByLabel('Safety Message').fill('Testing');
+    
+        await page.getByRole('button', { name: 'Close' }).click();
+
+        await waitForPageToBeReady({ page });
+
+        await expect(page.locator('#formRampComponent')).toBeHidden({ timeout: 10000 });
+        await expect(page.getByText('Record updated')).toBeVisible();
+    })
+
+    test('Testing feature dalys', async ({ page }) => {
+        await openModalFull(page);
+
+        const dateBlockIn = moment().add(15, 'minutes').format(FORMAT_DATE);
+        let dateBlockOut = moment().add(1, 'day').add(30, 'minutes').format(FORMAT_DATE);
+
+        const outboundBlockOut = page.getByTestId('dynamicField-outboundBlockOut')
+        await outboundBlockOut.click();
+        await outboundBlockOut.locator('input').fill(dateBlockOut);
+
+        const outboundScheduledDeparture = page.getByTestId('dynamicField-outboundScheduledDeparture').getByPlaceholder('MM/DD/YYYY HH:mm');
+        await outboundScheduledDeparture.click();
+        await outboundScheduledDeparture.fill(tomorrow);
+        
+        await page.getByRole('button', { name: 'Close' }).click();
+        await waitForPageToBeReady({ page });
+        await expect(page.getByText('You have to enter the at least one delay reason for the 31min delay time for flight')).toBeVisible({ timeout: 15000 })
+
+        const inboundBlockIn = page.getByTestId('dynamicField-inboundBlockIn');
+        await inboundBlockIn.click();
+        await inboundBlockIn.locator('input').fill(dateBlockIn);
+
+        const inboundScheduledArrival = page.getByTestId('dynamicField-inboundScheduledArrival').getByPlaceholder('MM/DD/YYYY HH:mm');
+        await inboundScheduledArrival.click();
+        await inboundScheduledArrival.fill(today);
+
+        await page.getByRole('button', { name: 'Close' }).click();
+        await waitForPageToBeReady({ page });
+        await expect(page.getByText('You have to enter the at least one delay reason for the 16min delay time for flight')).toBeVisible({ timeout: 15000 })
+
+        const code = page.getByRole('combobox', { name: 'Code' })
+
+        await code.first().click();
+        await page.getByRole('option').first().click();
+        
+        await code.nth(1).click();
+        await page.getByRole('option').nth(4).click();
+
+        await page.getByRole('button', { name: 'Close' }).click();
+
+        await expect(page.locator('#formRampComponent')).toBeHidden({ timeout: 10000 });
+        await expect(page.getByText('Record updated')).toBeVisible();
+
+        await openModalFull(page);
+
+        const operation = page.getByRole('combobox', { name: '*Operation' })
+        await expect(operation).toBeVisible();
+        await operation.click();
+        await page.getByRole('option', { name: 'TURN', exact: true }).click();
+
+        await expect(code).toHaveCount(1);
+
+        dateBlockOut = moment().add(1, 'day').add(25, 'minutes').format(FORMAT_DATE);
+
+        await outboundBlockOut.click();
+        await outboundBlockOut.locator('input').fill(dateBlockOut);
+
+        await outboundScheduledDeparture.click();
+        await outboundScheduledDeparture.fill(tomorrow);
+
+        await expect(code).not.toBeVisible({ timeout: 10000 });
+    })
+    
+    test('Testing to delete a "Work Order" in "Work Orders"', async ({ page }) => { 
+        await deleteWO(page)
+    })
+})
 
 // test.describe('Testing feature non-flight work order', () => {
 //     test('Testing creating a non-flight from "Additional Flight Services"', async ({ page }) => {
