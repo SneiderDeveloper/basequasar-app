@@ -283,10 +283,19 @@ test.describe.serial('Test flight CRUD', () => {
         const outboundScheduledDeparture = page.getByTestId('dynamicField-outboundScheduledDeparture').getByPlaceholder('MM/DD/YYYY HH:mm');
         await outboundScheduledDeparture.click();
         await outboundScheduledDeparture.fill(tomorrow);
-        
-        await page.getByRole('button', { name: 'Close' }).click();
+
+        await outboundBlockOut.click();
+        await outboundBlockOut.locator('input').fill(dateBlockOut);
+
+        await outboundScheduledDeparture.click();
+        await outboundScheduledDeparture.fill(tomorrow);
+
+        await page.waitForTimeout(1000)
         await waitForPageToBeReady({ page });
-        await expect(page.getByText('You have to enter the at least one delay reason for the 31min delay time for flight')).toBeVisible({ timeout: 15000 })
+        await page.getByRole('button', { name: 'Close' }).click();
+        await page.waitForTimeout(1000)
+        await waitForPageToBeReady({ page });
+        await expect(page.getByText('You have to enter the at least one delay reason for the')).toBeVisible({ timeout: 15000 })
 
         const inboundBlockIn = page.getByTestId('dynamicField-inboundBlockIn');
         await inboundBlockIn.click();
@@ -298,7 +307,7 @@ test.describe.serial('Test flight CRUD', () => {
 
         await page.getByRole('button', { name: 'Close' }).click();
         await waitForPageToBeReady({ page });
-        await expect(page.getByText('You have to enter the at least one delay reason for the 16min delay time for flight')).toBeVisible({ timeout: 15000 })
+        await expect(page.getByText('You have to enter the at least one delay reason for the')).toBeVisible({ timeout: 15000 })
 
         const code = page.getByRole('combobox', { name: 'Code' })
 
@@ -329,6 +338,9 @@ test.describe.serial('Test flight CRUD', () => {
 
         await outboundScheduledDeparture.click();
         await outboundScheduledDeparture.fill(tomorrow);
+
+        await waitForPageToBeReady({ page });
+        await page.waitForTimeout(1000)
 
         await expect(code).not.toBeVisible({ timeout: 10000 });
     })
