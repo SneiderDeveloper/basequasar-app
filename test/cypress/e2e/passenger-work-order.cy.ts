@@ -187,17 +187,17 @@ describe('Passenger Work Order', () => {
 
         cy.contains('Update Work Order', { timeout: 10000 }).should('be.visible');
 
-        cy.get('.q-expansion-item').then($item => {
-            if (!$item.hasClass('q-expansion-item--expanded')) {
-                cy.wrap($item).find('.q-expansion-item__container, .q-item').first().click();
-            }
-        });
-
         cy.get('[data-testid="dynamicField-outboundBlockOut"]')
             .find('input')
             .click()
             .clear()
             .type(dateBlockOut);
+
+        cy.get('.q-expansion-item').then($item => {
+            if (!$item.hasClass('q-expansion-item--expanded')) {
+                cy.wrap($item).find('.q-expansion-item__container, .q-item').first().click();
+            }
+        });
 
         cy.get('[data-testid="dynamicField-outboundScheduledDeparture"]')
             .find('input')
