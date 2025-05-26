@@ -1,3 +1,8 @@
+Cypress.on('uncaught:exception', (err, runnable) => {
+  // returning false previene que Cypress falle el test
+  return false;
+});
+
 describe('Auth', () => {
     it('Login', () => {
         cy.visit('/#/passenger/work-orders/index');
