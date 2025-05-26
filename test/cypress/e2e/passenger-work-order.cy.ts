@@ -11,19 +11,19 @@ const tomorrow = moment().add(1, 'day').format(FORMAT_DATE);
 const yesterday = moment().subtract(1, 'day').format(FORMAT_DATE);
 
 describe('Passenger Work Order', () => {
-    it('Login', () => {
+    beforeEach(() => {
         cy.visit('/#/passenger/work-orders/index');
-        cy.get('.q-form > :nth-child(1)').type('soporte@imaginacolombia.com');
-        cy.get('.q-form > :nth-child(2)').type('ZAQxsw123@');
-        cy.get('.q-btn').click();
+        cy.get('body').then(($body) => {
+            if ($body.find('.q-form > :nth-child(1)').length) {
+                cy.get('.q-form > :nth-child(1)').type('soporte@imaginacolombia.com');
+                cy.get('.q-form > :nth-child(2)').type('ZAQxsw123@');
+                cy.get('.q-btn').click();
+            }
+            // Si no existe el campo, simplemente no hace nada y sigue el test
+        });
     });
 
     it('Check visibility of fields in the creation modal and create a work order', () => {
-        // cy.visit('/#/passenger/work-orders/index');
-
-        // cy.get('.q-form > :nth-child(1)').type('soporte@imaginacolombia.com');
-        // cy.get('.q-form > :nth-child(2)').type('ZAQxsw123@');
-        // cy.get('.q-btn').click();
         cy.wait(10000);
 
         cy.get('[data-testid="btn-dropdown-New-1"]').click();
