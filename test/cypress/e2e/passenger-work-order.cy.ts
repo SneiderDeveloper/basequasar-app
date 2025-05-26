@@ -35,10 +35,8 @@ describe('Passenger Work Order', () => {
         cy.contains('If you left this field empty').should('be.visible');
         cy.get('button').contains('Save').should('be.visible');
 
-        // cy.contains('*Customer').click();
         cy.get('input[aria-label="*Customer"]').click();
-        // cy.get('input[aria-label="*Customer"]').select(2);
-        cy.get('[role="option"]').eq(1).click({ timeout: 10000 });
+        cy.get('[role="option"]', { timeout: 60000 }).eq(2, { timeout: 10000 }).click();
         cy.get('#formRampComponent div').contains('New Work Order').first().click();
 
         cy.contains('*Flight number').click();
