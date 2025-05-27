@@ -14,7 +14,7 @@ describe('Passenger Work Order', () => {
     beforeEach(() => {
         cy.visit('/#/passenger/work-orders/index');
         cy.wait(10000);
-        cy.get('body', { timeout: 5000 }).then(($body) => {
+        cy.get('body').then(($body) => {
             if ($body.find('.q-form > :nth-child(1)').length > 0) {
                 cy.get('.q-form > :nth-child(1)').type('soporte@imaginacolombia.com')
                 cy.get('.q-form > :nth-child(2)').type('ZAQxsw123@');          
@@ -98,7 +98,6 @@ describe('Passenger Work Order', () => {
         cy.get('#formRampComponent div').contains('Update Work Order Id:').first().click();
 
         // Pax Operation
-        // cy.contains('Pax Operation').should('be.visible');
         cy.get('input[aria-label="Pax Operation"]').click();
         cy.get('.q-menu .q-item').eq(1).click();
         cy.get('#formRampComponent div').contains('Update Work Order Id:').first().click();
@@ -189,13 +188,16 @@ describe('Passenger Work Order', () => {
 
         cy.get('[data-testid="dynamicField-outboundBlockOut"]')
             .find('input')
-            .click()
-            .clear()
+            .clear({ force: true })
             .type(dateBlockOut);
 
-        cy.get('.q-expansion-item').then($item => {
-            if (!$item.hasClass('q-expansion-item--expanded')) {
-                cy.wrap($item).find('.q-expansion-item__container, .q-item').first().click();
+        // Expand the first expansion item if not expanded
+        cy.get('form').find('.q-expansion-item.q-expansion-item--standard').then($item => {
+            if ($item.first().hasClass('q-expansion-item--collapsed')) {
+                cy.wrap($item.first()).find('.q-expansion-item__container').click();
+            }
+            if ($item.eq(1).hasClass('q-expansion-item--collapsed')) {
+                cy.wrap($item.eq(1)).find('.q-expansion-item__container').click();
             }
         });
 
