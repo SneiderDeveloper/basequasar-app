@@ -31,13 +31,15 @@ describe('Passenger Schedule', () => {
         cy.get('input[aria-label="*Flight number"]').clear().type('TEST-00');
 
         cy.get('input[aria-label="*Operation"]').click();
-        cy.get('[role="option"]').first().click();
+        cy.get('[role="option"]').eq(4).click();
 
-        cy.get('input[aria-label="STD"]').clear().type(moment().format('HH:mm'));
-
-        cy.get('input[placeholder="MM/DD/YYYY HH:mm"]')
+        cy.get('input[aria-label="STD"]')
             .clear()
             .type(moment().add(20, 'minute').format('MM/DD/YYYY HH:mm'));
+
+        cy.get('input[aria-label="STA"]')
+            .clear()
+            .type(moment().format('HH:mm'));
 
         cy.get('input[aria-label="Flight Status"]').click();
         cy.get('[role="option"]').contains('Departed').click();
@@ -64,24 +66,40 @@ describe('Passenger Schedule', () => {
 
         cy.get('input[aria-label="*Cancellation Notice time entered in Hours"]').click().clear().type('51');
 
-        cy.get('input[aria-label="*Flight number"]').first().click().clear().type('TEST-01');
-        cy.get('input[aria-label="*Flight number"]').eq(2).click().clear().type('TEST-01');
+        cy.get('form').find('.q-expansion-item.q-expansion-item--standard').then($item => {
+            if ($item.first().hasClass('q-expansion-item--collapsed')) {
+                cy.wrap($item.first()).find('.q-expansion-item__container').click();
+            }
+            if ($item.eq(1).hasClass('q-expansion-item--collapsed')) {
+                cy.wrap($item.eq(1)).find('.q-expansion-item__container').click();
+            }
+        });
 
-        cy.get('input[aria-label="Origin"]').click().clear().type('acadiana');
+        cy.get('[data-testid="dynamicField-inboundFlightNumber"]').clear().type('TEST-01');
+        cy.get('[data-testid="dynamicField-outboundFlightNumber"]').clear().type('TEST-01');
+
+        cy.get('input[aria-label="Origin"]').clear().type('acadiana');
         cy.get('[role="option"]').contains('Acadiana Rgnl (ARA)').click();
 
-        cy.get('[data-testid="dynamicField-inboundTailNumber"] input[aria-label="Tail N°"]').click().clear().type('78');
+        cy.get('[data-testid="dynamicField-inboundTailNumber"]')
+            .find('input')
+            .clear({ force: true, timeout: 10000 })
+            .type('78');
 
-        cy.get('input[aria-label="Inbound Gate Arrival"]').click().clear().type('18');
+        cy.get('input[aria-label="Inbound Gate Arrival"]').clear().type('18');
 
-        cy.get('input[aria-label="Destination"]').click().clear().type('Almaty');
+        cy.get('input[aria-label="Destination"]').clear().type('Almaty');
         cy.get('[role="option"]').contains('Almaty (ALA)').click();
 
         cy.contains('Update Work Order Id:').click();
 
-        cy.get('[data-testid="dynamicField-outboundTailNumber"] input[aria-label="Tail N°"]').click().clear().type('78');
+        cy.get('[data-testid="dynamicField-outboundTailNumber"]')
+            .find('input')
+            .click()
+            .clear()
+            .type('78');
 
-        cy.get('input[aria-label="Outbound Gate Departure"]').click().clear().type('19');
+        cy.get('input[aria-label="Outbound Gate Departure"]').clear().type('19');
 
         cy.get('#stepComponent').contains('Services').click();
         cy.contains('Cargo Man Power').click();
@@ -93,21 +111,40 @@ describe('Passenger Schedule', () => {
         cy.get('input[aria-label="Our delay"]').click();
         cy.get('[role="option"]').contains('Yes').click();
 
-        cy.get('input[aria-label="Delay Comment"]').click().clear().type('4');
-
+        cy.get('textarea').clear().type('Delay comment');
         cy.get('input[aria-label="Code"]').click();
-        cy.get('[role="option"]').eq(4).click();
+        cy.get('[role="option"]').eq(1).click();
+        cy.get('input[aria-label="Time"]').clear().type('24');
 
-        cy.get('input[aria-label="Time"]').first().click().clear().type('24');
+        cy.get('[role="combobox"][aria-label="Flight type"]').click();
+        cy.get('[role="option"]').first().click();
 
         cy.get('#stepComponent').contains('Remark').click();
-        cy.get('input[aria-label="Remark"]').click().clear().type('Message');
-        cy.get('input[aria-label="Safety Message"]').clear().type('Message');
+        cy.get('textarea[aria-label="Remark"]').clear().type('Message');
+        cy.get('textarea[aria-label="Safety Message"]').clear().type('Message');
 
         cy.get('button').contains('Close').click();
-        cy.get('#innerLoadingMaster div', { timeout: 10000 }).should('not.be.visible');
+        cy.get('#innerLoadingMaster div', { timeout: 10000 }).should('not.exist');
 
         cy.contains('TEST-01').last().should('be.visible');
         cy.contains('Record updated').should('be.visible');
+    })
+
+    it('Testing to delete a "Work Order" in Schedule', () => {
+        cy.get('[data-testid="kanbanDay"]')
+            .find('div')
+            .contains('TEST-01/TEST-01')
+            .parentsUntil('[data-testid="kanbanDay"]')
+            .find('#kanban-card-actions')
+            .eq(2)
+            .click();
+
+        cy.get('#cardContent').contains('TEST-01').should('be.visible');
+        cy.contains('Are you sure, you want to').should('be.visible');
+        cy.get('button').contains('Cancel').should('be.visible');
+        cy.get('button').contains('Delete').should('be.visible');
+        cy.get('button').contains('Delete').click();
+
+        cy.contains('Record NOT deleted').should('not.exist');
     })
 })
