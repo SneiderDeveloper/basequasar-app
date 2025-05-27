@@ -253,7 +253,7 @@ describe('Passenger Work Order', () => {
         cy.get('a').contains('Edit').click();
 
         cy.get('[role="combobox"][aria-label="*Operation"]').should('be.visible').click();
-        cy.get('[role="option"]').contains(/^TURN$/).click(); // ^ y $ aseguran coincidencia exacta
+        cy.get('[role="option"]').contains(/^TURN$/).click();
 
         cy.get('[role="combobox"][aria-label="Code"]').should('have.length', 1);
 
@@ -264,6 +264,16 @@ describe('Passenger Work Order', () => {
             .click()
             .clear()
             .type(dateBlockOut);
+        
+        // Expand the first expansion item if not expanded
+        cy.get('form').find('.q-expansion-item.q-expansion-item--standard').then($item => {
+            if ($item.first().hasClass('q-expansion-item--collapsed')) {
+                cy.wrap($item.first()).find('.q-expansion-item__container').click();
+            }
+            if ($item.eq(1).hasClass('q-expansion-item--collapsed')) {
+                cy.wrap($item.eq(1)).find('.q-expansion-item__container').click();
+            }
+        });
 
         cy.get('[data-testid="dynamicField-outboundScheduledDeparture"]')
             .find('input')
