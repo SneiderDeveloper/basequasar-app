@@ -96,7 +96,7 @@ describe('Passenger fueling', () => {
         cy.get('div:nth-child(2) > div > div > #dynamicFieldComponent > div > .tw-flex > div:nth-child(3) > .q-btn').first().click();
         cy.get('section button').should('be.visible');
 
-        cy.get('#stepComponent div').contains('Remark').eq(2).click();
+        cy.get('#stepComponent').contains('Remark').click();
 
         cy.get('label').contains('Remark').parent().find('input,textarea').click().clear().type('Message test');
         cy.get('label').contains('Safety Message').parent().find('input,textarea').click().clear().type('Message test');
