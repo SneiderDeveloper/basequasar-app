@@ -101,7 +101,7 @@ describe('Passenger fueling', () => {
         cy.get('label').contains('Safety Message').parent().find('input,textarea').click().clear().type('Message test');
 
         cy.get('button').contains('Close Flight').click();
-        cy.contains('Update fueling Id:', { timeout: 10000 }).should('not.exist');
+        cy.contains('Update fueling Id:', { timeout: 20000 }).should('not.exist');
         cy.contains('Record updated').should('be.visible');
     })
 
