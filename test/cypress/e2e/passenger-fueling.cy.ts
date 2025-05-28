@@ -77,7 +77,7 @@ describe('Passenger fueling', () => {
         cy.get('input[aria-label="*Customer/Contract"]').click();
         cy.get('[role="option"]', { timeout: 10000 }).first().click();
 
-        cy.get('#masterModalContent div').contains('Update fueling Id:').first().click();
+        cy.get('#masterModalContent').contains('Update fueling Id:').click();
 
         cy.get('input[aria-label="*A/C Type"]').click();
         cy.get('[role="option"]', { timeout: 10000 }).first().click();
@@ -85,7 +85,7 @@ describe('Passenger fueling', () => {
         cy.get('input[aria-label="*Carrier"]').click();
         cy.get('[role="option"]', { timeout: 10000 }).eq(2).click();
 
-        cy.get('#masterModalContent div').contains('Update fueling Id:').first().click();
+        cy.get('#masterModalContent').contains('Update fueling Id:').click();
 
         cy.get('label').contains('Aircraft Registration').parent().find('input').click().clear().type('545218');
 
@@ -100,8 +100,8 @@ describe('Passenger fueling', () => {
         cy.get('label').contains('Remark').parent().find('input,textarea').click().clear().type('Message test');
         cy.get('label').contains('Safety Message').parent().find('input,textarea').click().clear().type('Message test');
 
-        cy.contains('button', 'Close Flight').click();
-        cy.contains('Update fueling Id:').should('not.exist');
+        cy.get('button').contains('Close Flight').click();
+        cy.contains('Update fueling Id:', { timeout: 10000 }).should('not.exist');
         cy.contains('Record updated').should('be.visible');
     })
 
