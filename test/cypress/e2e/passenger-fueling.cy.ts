@@ -74,17 +74,16 @@ describe('Passenger fueling', () => {
         cy.get('tbody .q-tr.tw-bg-white').first().find('button').eq(1).click();
         cy.contains('a', 'Edit').click();
 
-        cy.get('label').contains('*Customer/Contract').parent().find('input').click().clear().type('AA corporation');
-        cy.get('[role="option"]').contains('AA Corporation (Ad Hoc)').click();
+        cy.get('input[aria-label="*Customer/Contract"]').click();
+        cy.get('[role="option"]', { timeout: 10000 }).first().click();
 
         cy.get('#masterModalContent div').contains('Update fueling Id:').first().click();
 
-        cy.get('label').contains('*A/C Type').parent().find('input,select').click();
-        cy.get('[role="option"]').first().click();
+        cy.get('input[aria-label="*A/C Type"]').click();
+        cy.get('[role="option"]', { timeout: 10000 }).first().click();
 
-        cy.get('label').contains('*Carrier').parent().find('input,select').click();
-        cy.wait(1000);
-        cy.get('[role="option"]').eq(2).click();
+        cy.get('input[aria-label="*Carrier"]').click();
+        cy.get('[role="option"]', { timeout: 10000 }).eq(2).click();
 
         cy.get('#masterModalContent div').contains('Update fueling Id:').first().click();
 
