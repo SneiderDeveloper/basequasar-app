@@ -50,8 +50,8 @@ describe('Passenger fueling', () => {
     
     it('Testing to create a "Work Order" in fueling', () => {
         cy.contains('button', 'New').click();
-        cy.get('label').contains('*Customer/Contract').parent().find('input,select').click();
-        cy.get('ul[role="listbox"] li, [role="option"]').first().click();
+        cy.get('label').contains('*Customer/Contract').parent().find('input').click();
+        cy.get('[role="option"]').first().click();
 
         cy.get('label').contains('*Fueling ticket number').parent().find('input').as('ticketInput');
         cy.get('@ticketInput').click().clear().type('TEST-00');
@@ -60,8 +60,8 @@ describe('Passenger fueling', () => {
         cy.get('@responsibleInput').click().clear().type('ima');
         cy.get('[role="option"]').contains('Imagina Colombia').click();
 
-        cy.get('label').contains('*Station').parent().find('input,select').click();
-        cy.get('ul[role="listbox"] li, [role="option"]').first().click();
+        cy.get('label').contains('*Station').parent().find('input').click();
+        cy.get('[role="option"]').first().click();
 
         cy.contains('button', 'Save').click();
 
