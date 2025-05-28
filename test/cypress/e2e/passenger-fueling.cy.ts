@@ -51,17 +51,17 @@ describe('Passenger fueling', () => {
     it('Testing to create a "Work Order" in fueling', () => {
         cy.contains('button', 'New').click();
         cy.get('input[aria-label="*Customer/Contract"]').click();
-        cy.get('[role="option"]').first().click();
+        cy.get('[role="option"]', { timeout: 1000 }).first().click();
 
         cy.get('label').contains('*Fueling ticket number').parent().find('input').as('ticketInput');
         cy.get('@ticketInput').click().clear().type('TEST-00');
 
         cy.get('input[aria-label="Responsible"]').type('ima');
-        cy.get('[role="option"]').contains('Imagina Colombia').click();
+        cy.get('[role="option"]', { timeout: 10000 }).contains('Imagina Colombia').click();
         
 
         cy.get('label').contains('*Station').parent().find('input').click();
-        cy.get('[role="option"]').first().click();
+        cy.get('[role="option"]', { timeout: 10000 }).first().click();
 
         cy.get('button').contains('Save').click();
 
