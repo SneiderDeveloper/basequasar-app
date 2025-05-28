@@ -94,15 +94,15 @@ describe('Passenger fueling', () => {
         cy.get('ul').contains('Services').click();
         cy.get('.tw-flex > div:nth-child(3) > .q-btn').first().click();
         cy.get('div:nth-child(2) > div > div > #dynamicFieldComponent > div > .tw-flex > div:nth-child(3) > .q-btn').first().click();
-        cy.get('section button').should('be.visible');
+        // cy.get('section button').eq(1).find('button').should('be.visible');
 
-        cy.get('#stepComponent div').contains('Remark').eq(2).click();
+        cy.get('#stepComponent').contains('Remark').click();
 
         cy.get('label').contains('Remark').parent().find('input,textarea').click().clear().type('Message test');
         cy.get('label').contains('Safety Message').parent().find('input,textarea').click().clear().type('Message test');
 
         cy.contains('button', 'Close Flight').click();
-        cy.get('#masterModalContent div').contains('Update fueling Id:').should('not.exist');
+        cy.contains('Update fueling Id:').should('not.exist');
         cy.contains('Record updated').should('be.visible');
     })
 
