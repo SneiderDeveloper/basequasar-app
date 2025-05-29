@@ -18,6 +18,68 @@ describe('Ramp Schedule', () => {
         });
     });
 
+    it('Testing the integrity of the station selection modal', () => {
+        cy.get('#masterModalContent').should('be.visible', { timeout: 20000 });
+        cy.contains('Filter schedule').should('be.visible');
+        cy.contains('You must first select a').should('be.visible');
+        cy.get('label').contains('Station').should('be.visible');
+
+        cy.selectStation();
+
+        cy.get('#masterModalContent').should('not.be.visible');
+        cy.contains('Filter schedule').should('not.be.visible');
+    })
+
+    it('Testing that the modal requesting the station is triggered correctly', () => {
+        cy.selectStation();
+
+        cy.get('button').contains('Scheduler').click();
+        cy.get('button').contains('Back to schedule').click();
+        cy.contains('Filter schedule').should('not.be.visible');
+
+        cy.get('[aria-label="Collapse \\"Ramp\\""]').click();
+        cy.get('[aria-label="Expand \\"Ramp\\""]').click();
+        cy.get('#menuItem-qrampadminworkOrders').click();
+        cy.get('#menuItem-qrampadminschedule').click();
+        cy.contains('Filter schedule').should('not.be.visible');
+
+        cy.get('#menuItem-qrampadminpassengerOperationTypes').click();
+        cy.get('#menuItem-qrampadminschedule').click();
+        cy.contains('Filter schedule').should('not.be.visible');
+
+        cy.get('[aria-label="Expand \\"Passenger\\""]').click();
+        cy.get('#menuItem-qrampadminpassengerSchedule').click();
+        cy.contains('Filter schedule').should('be.visible');
+        cy.get('label').contains('Station').click();
+        cy.get('input').filter(':visible').type('Austin, TX');
+        cy.get('[role="option"]').contains('Austin, TX (AUS)').click();
+        cy.get('button').contains('filters').click();
+
+        cy.get('[aria-label="Expand \\"Ramp\\""]').click();
+        cy.get('#menuItem-qrampadminschedule').click();
+        cy.contains('Filter schedule').should('be.visible');
+    })
+
+    it('Testing the visibility of actions and titles in the "schedule"', () => {
+        cy.get('[placeholder="Search"]').should('be.visible');
+        cy.get('.actions-content > div > .q-btn').first().should('be.visible');
+        cy.get('div:nth-child(3) > .q-btn').first().should('be.visible');
+        cy.get('button').contains('Scheduler').should('be.visible');
+        cy.get('#filter-button-crud').should('be.visible');
+        cy.get('div:nth-child(6) > .q-btn').first().should('be.visible');
+
+        cy.get('#pageActionscomponent').find('[aria-label="Expand"]').click();
+        cy.contains('Refresh').should('be.visible');
+        cy.contains('Refresh every 1 minutes').should('be.visible');
+        cy.contains('Refresh every 5 minutes').should('be.visible');
+        cy.contains('Refresh every 10 minutes').should('be.visible');
+        cy.contains('Refresh every 15 minutes').should('be.visible');
+
+        cy.get('button').contains('Week').should('be.visible');
+        cy.get('button').contains('Today').should('be.visible');
+        cy.get('a').contains('Schedule').should('be.visible');
+    })
+
     it('Testing to create a "Work Order" in Schedule', () => {
         // Seleccionar la estación
         cy.contains('label', 'Station').click();
