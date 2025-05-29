@@ -29,15 +29,15 @@ describe('Passenger labor work order', () => {
         cy.contains('button', 'Save').should('be.visible');
 
         cy.get('input[aria-label="*Customer"]').click();
-        cy.get('[role="option"]').first().click();
+        cy.get('[role="option"]', { timeout: 10000 }).first().click();
         cy.get('#formRampComponent div').contains('New Work Order').first().click();
 
         cy.get('input[aria-label="*Flight number"]').clear().type('TEST-00');
         cy.get('input[aria-label="*Station"]').click();
-        cy.get('[role="option"]').first().click();
+        cy.get('[role="option"]', { timeout: 10000 }).first().click();
         cy.get('input[aria-label="Assigned to"]').type('ima');
-        cy.get('[role="option"]')
-            .contains('Imagina Colombia', { timeout: 10000 })
+        cy.get('[role="option"]', { timeout: 10000 })
+            .contains('Imagina Colombia')
             .click();
         cy.contains('button', 'Save').click();
 

@@ -52,22 +52,7 @@ describe('Passenger Schedule', () => {
     // })
 
     it('Testing the visibility of actions and titles in the "schedule"', () => {
-        cy.get('input[placeholder="Search"]').should('be.visible');
-        cy.get('.actions-content > div > .q-btn').first().should('be.visible');
-        cy.get('div:nth-child(3) > .q-btn').first().should('be.visible');
-        cy.get('button').contains('Scheduler').should('be.visible');
-        cy.get('#filter-button-crud').should('be.visible');
-        cy.get('div:nth-child(6) > .q-btn').first().should('be.visible');
-
-        cy.get('div:nth-child(6) > .q-btn').first().click({ force: true });
-        cy.contains('Refresh').should('be.visible');
-        cy.contains('Refresh every 1 minutes').should('be.visible');
-        cy.contains('Refresh every 5 minutes').should('be.visible');
-        cy.contains('Refresh every 10 minutes').should('be.visible');
-        cy.contains('Refresh every 15 minutes').should('be.visible');
-
-        cy.get('button').contains('Week').should('be.visible');
-        cy.get('button').contains('Today').should('be.visible');
+        cy.calendarTitlesAndActions();
     })
 
     it('Testing changes from day to week and from week to day', () => {
@@ -91,32 +76,11 @@ describe('Passenger Schedule', () => {
     it('Testing to create a "Work Order" in Schedule', () => {
         cy.get('.tw-inline-flex > .q-btn-dropdown').click({ timeout: 10000 });
         cy.get('.q-list > :nth-child(1)').click();
-        cy.get('input[aria-label="*Flight number"]').clear().type('TEST-00');
-
-        cy.get('input[aria-label="*Operation"]').click();
-        cy.get('[role="option"]').eq(4).click();
-
-        cy.get('input[aria-label="STD"]')
-            .clear()
-            .type(moment().add(20, 'minute').format('MM/DD/YYYY HH:mm'));
-
-        cy.get('input[aria-label="STA"]')
-            .clear()
-            .type(moment().format('HH:mm'));
-
-        cy.get('input[aria-label="Flight Status"]').click();
-        cy.get('[role="option"]').contains('Departed').click();
-
-        cy.get('input[aria-label="Aircraft types"]').click();
-        cy.get('[role="option"]').first().click();
-
-        cy.get('.tw-border > .tw-space-x-2').find('button').eq(0).click();
-
-        cy.contains('TEST-00/TEST-00').last().should('be.visible');
+        cy.createWorkOrderInSchedule();
     })
 
     it('Testing updating a "Work Order" in Schedule', () => {
-        cy.contains('TEST-00/TEST-', { timeout: 10000 }).first().click();
+        cy.contains('TEST-00/TEST-00', { timeout: 10000 }).first().click();
 
         cy.contains('Update Work Order Id:', { timeout: 10000 }).should('be.visible');
 
@@ -124,7 +88,7 @@ describe('Passenger Schedule', () => {
         cy.get('[role="option"]', { timeout: 40000 }).first().click();
 
         cy.get('input[aria-label="Cancellation type"]').click();
-        cy.get('[role="option"]').contains('Cancelled Flight').click();
+        cy.get('[role="option"]').first().click();
 
         cy.get('input[aria-label="*A/C Type"]').click();
         cy.get('[role="option"]').first().click();
@@ -200,39 +164,11 @@ describe('Passenger Schedule', () => {
     })
 
     it('Testing to delete a "Work Order" in Schedule', () => {
-        cy.get('[data-testid="kanbanDay"]')
-            .find('div')
-            .contains('TEST-01/TEST-01')
-            .parents('[data-testid="kanbanDay"]')
-            .find('div')
-            .find('button')
-            .eq(3)
-            .click();
-
-        cy.get('#cardContent').contains('TEST-01').should('be.visible');
-        cy.contains('Are you sure, you want to').should('be.visible');
-        cy.get('button').contains('Cancel').should('be.visible');
-        cy.get('button').contains('Delete').should('be.visible');
-        cy.get('button').contains('Delete').click();
-
-        cy.contains('Record NOT deleted').should('not.exist');
+        cy.deleteWorkOrderInSchedule();
     })
 
     it('Testing the schedule filters', () => {
-        cy.get('#filter-button-crud').click();
-        cy.get('input[aria-label="Filter by time"]', { timeout: 10000 }).should('be.visible');
-        cy.get('input[aria-label="Customer"]').should('be.visible');
-        cy.get('input[aria-label="Carrier"]').should('be.visible');
-        cy.get('input[aria-label="Station"]').scrollIntoView().should('be.visible');
-        cy.get('input[aria-label="Status"]', { timeout: 10000 }).should('be.visible');
-        cy.get('input[aria-label="Operation type"]').should('be.visible');
-        cy.get('input[aria-label="Flight Status"]').should('be.visible');
-        cy.get('input[aria-label="Ad Hoc"]').should('be.visible');
-        cy.get('label').contains('Filters').should('be.visible');
-        cy.get('button').contains('Search').should('be.visible');
-
-        cy.get('.q-dialog__inner').find('i[role="presentation"]').eq(1).click();
-        cy.get('label').contains('Filters').should('not.exist');
+        cy.scheduleFilters();
     })
 
     it('Testing the sheduler view actions', () => {
@@ -248,103 +184,14 @@ describe('Passenger Schedule', () => {
     })
 
     it('Testing create a Scheduler', () => {
-        cy.get('button').contains('Scheduler').click();
-        cy.get('button').contains('New').click();
-        cy.contains('New Scheduler').should('be.visible');
-
-        cy.get('input[aria-label="*Customer/Contract"]').click();
-        cy.get('[role="option"]', { timeout: 10000 }).first().click();
-        cy.get('#masterModalContent div').contains('New Scheduler').first().click();
-
-        cy.get('input[aria-label="Airlines"]').click();
-        cy.get('[role="option"]').first().click();
-        cy.get('#masterModalContent div').contains('New Scheduler').first().click();
-
-        cy.get('input[aria-label="Station"]').click();
-        cy.get('[role="option"]').first().click();
-        cy.get('#masterModalContent div').contains('New Scheduler').first().click();
-
-        cy.get('input[aria-label="Aircraft types"]').click();
-        cy.get('[role="option"]').first().click();
-        cy.get('#masterModalContent div').contains('New Scheduler').first().click();
-
-        cy.get('input[aria-label="*Operation"]').click();
-        cy.get('[role="option"]').eq(2).click();
-        cy.get('#masterModalContent div').contains('New Scheduler').first().click();
-
-        cy.get('input[aria-label="* From Date"]').click().clear().type(moment().format('MM/DD/YYYY'));
-        cy.get('input[aria-label="* Until Date"]').click().clear().type(moment().add(1, 'day').format('MM/DD/YYYY'));
-
-        cy.get('input[aria-label="Days Of Week"]').click();
-        cy.get('[role="option"]', { timeout: 10000 }).contains('Friday').click();
-        // cy.get('[role="option"]', { timeout: 10000 }).contains('Monday').click();
-        // cy.get('[role="option"]', { timeout: 10000 }).contains('Saturday').click();
-
-        cy.contains('New Scheduler').first().click();
-
-        cy.get('input[aria-label="*Flight number"]').clear().type('TEST-02');
-        cy.get('input[aria-label="* Inbound Schedule Arrival"]').clear().type(moment().format('HH:mm'));
-        cy.get('input[aria-label="*Outbound Flight Number"]').click().clear().type('547');
-        cy.get('input[aria-label="*Outbound Schedule Departure "]').click().clear().type(moment().add(1, 'hour').format('HH:mm'));
-        cy.get('input[aria-label="Dep. +Days"]').click().clear().type('7');
-
-        cy.get('button').contains('Save').click();
-        cy.get('#masterModalContent #innerLoadingMaster circle').should('be.visible');
-        cy.get('#masterModalContent #innerLoadingMaster circle', { timeout: 10000 }).should('not.exist');
-        cy.contains('New Scheduler').should('not.exist');
+        cy.createScheduler();
     })
 
     it('Testing updating a scheduler', () => {
-        cy.get('button').contains('Scheduler').click();
-
-        // Open modal
-        cy.get('tbody').find('.q-tr.tw-bg-white').first().find('button').click();
-        cy.get('a').contains('Edit').click();
-
-        cy.contains('Update scheduler Id:').should('be.visible');
-
-        cy.get('input[aria-label="Airlines"]').click();
-        cy.get('[role="option"]').first().click({ timeout: 10000 });
-        cy.contains('Update scheduler Id:').first().click();
-
-        cy.get('input[aria-label="Aircraft types"]').click();
-        cy.get('[role="option"]', { timeout: 10000 }).first().click();
-        cy.contains('Update scheduler Id:').first().click();
-
-        cy.get('input[aria-label="*Flight number"]').click().clear().type('TEST-03');
-        cy.get('input[aria-label="* Inbound Schedule Arrival"]')
-            .clear()
-            .type(moment().add(20, 'minutes').format('HH:mm'));
-        cy.get('input[aria-label="*Outbound Flight Number"]').click().clear().type('850');
-        cy.get('input[aria-label="*Outbound Schedule Departure "]')
-            .click()
-            .clear()
-            .type(moment().add(2, 'hour').format('HH:mm'));
-        cy.get('input[aria-label="Dep. +Days"]').click().clear().type('8');
-
-        cy.get('button').contains('Save').click();
-        cy.get('#masterModalContent #innerLoadingMaster circle').should('be.visible');
-        cy.get('#masterModalContent #innerLoadingMaster circle', { timeout: 10000 }).should('not.exist');
-        cy.contains('Update scheduler Id:').should('not.exist');
+        cy.updatingScheduler();
     })
 
     it('Testing the removal of a Scheduler', () => {
-        cy.get('button').contains('Scheduler').click();
-
-        cy.get('tbody').find('.q-tr.tw-bg-white').first().as('firstRow');
-        cy.get('@firstRow').should('be.visible');
-
-        cy.get('@firstRow').find('td').eq(0).invoke('text').then((id) => {
-            cy.get('@firstRow').find('button').click();
-
-            cy.get('a').contains('Delete').click();
-            cy.get('button').contains('Cancel').should('be.visible');
-            cy.contains('Are you sure, you want to').should('be.visible');
-            cy.get('button').contains('Delete').should('be.visible');
-            cy.get('button').contains('Delete').click();
-
-            cy.contains('Record NOT deleted').should('not.exist');
-            cy.get('table').contains(id, { timeout: 60000 }).should('not.exist');
-        });
+        cy.removalScheduler();
     })
 })
