@@ -25,7 +25,7 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('login', () => {
-    cy.wait(7000);
+    cy.wait(9000);
     cy.get('body').then(($body) => {
         if ($body.find('.q-form > :nth-child(1)').length > 0) {
             cy.get('.q-form > :nth-child(1)').type('soporte@imaginacolombia.com')
