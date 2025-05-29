@@ -48,7 +48,8 @@ export default defineConfig({
         }
       });
     },
-    baseUrl: 'http://agreeable-meadow-08dd7350f.2.azurestaticapps.net/',
+    // baseUrl: 'http://localhost:8080/',
+    baseUrl: 'https://agreeable-meadow-08dd7350f.2.azurestaticapps.net/#',
     supportFile: 'test/cypress/support/e2e.ts',
     specPattern: 'test/cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
     viewportWidth: 1366,

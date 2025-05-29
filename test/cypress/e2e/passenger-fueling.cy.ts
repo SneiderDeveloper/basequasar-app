@@ -6,7 +6,7 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 describe('Passenger fueling', () => {
     beforeEach(() => {
-        cy.visit('/#/ramp/fueling/index');
+        cy.visit('/ramp/fueling/index');
         cy.wait(10000);
         cy.get('body').then(($body) => {
             if ($body.find('.q-form > :nth-child(1)').length > 0) {
@@ -53,11 +53,15 @@ describe('Passenger fueling', () => {
         cy.get('input[aria-label="*Customer/Contract"]').click();
         cy.get('[role="option"]', { timeout: 10000 }).first().click();
 
-        cy.get('label').contains('*Fueling ticket number').parent().find('input').as('ticketInput');
+        cy.get('label')
+            .contains('*Fueling ticket number')
+            .parent()
+            .find('input')
+            .as('ticketInput');
         cy.get('@ticketInput').click().clear().type('TEST-00');
 
         cy.get('input[aria-label="Responsible"]').type('ima');
-        cy.get('[role="option"]', { timeout: 10000 }).contains('Imagina Colombia').click();
+        cy.get('[role="option"]', { timeout: 20000 }).contains('Imagina Colombia').click();
         
 
         cy.get('label').contains('*Station').parent().find('input').click();
@@ -65,9 +69,7 @@ describe('Passenger fueling', () => {
 
         cy.get('button').contains('Save').click();
 
-        cy.get('#masterModalContent')
-            .contains('Update fueling')
-            .should('be.visible', { timeout: 15000 });
+        cy.contains('Update fueling', { timeout: 15000 }).should('be.visible');
     })
 
     it('Testing updating a "Work Order" in fueling', () => {
@@ -87,18 +89,38 @@ describe('Passenger fueling', () => {
 
         cy.get('#masterModalContent').contains('Update fueling Id:').click();
 
-        cy.get('label').contains('Aircraft Registration').parent().find('input').click().clear().type('545218');
+        cy.get('label')
+            .contains('Aircraft Registration')
+            .parent()
+            .find('input')
+            .click()
+            .clear()
+            .type('545218');
 
         cy.get('#stepComponent').contains('Services').click();
         cy.get('ul').contains('Services').click();
         cy.get('.tw-flex > div:nth-child(3) > .q-btn').first().click();
-        cy.get('div:nth-child(2) > div > div > #dynamicFieldComponent > div > .tw-flex > div:nth-child(3) > .q-btn').first().click();
+        cy.get('div:nth-child(2) > div > div > #dynamicFieldComponent > div > .tw-flex > div:nth-child(3) > .q-btn')
+            .first()
+            .click();
         // cy.get('section button').eq(1).find('button').should('be.visible');
 
         cy.get('#stepComponent').contains('Remark').click();
 
-        cy.get('label').contains('Remark').parent().find('input,textarea').click().clear().type('Message test');
-        cy.get('label').contains('Safety Message').parent().find('input,textarea').click().clear().type('Message test');
+        cy.get('label')
+            .contains('Remark')
+            .parent()
+            .find('input,textarea')
+            .click()
+            .clear()
+            .type('Message test');
+        cy.get('label')
+            .contains('Safety Message')
+            .parent()
+            .find('input,textarea')
+            .click()
+            .clear()
+            .type('Message test');
 
         cy.get('button').contains('Close Flight').click();
         cy.contains('Update fueling Id:', { timeout: 20000 }).should('not.exist');

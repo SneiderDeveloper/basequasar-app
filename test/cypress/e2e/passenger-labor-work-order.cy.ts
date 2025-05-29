@@ -6,7 +6,7 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 describe('Passenger labor work order', () => {
     beforeEach(() => {
-        cy.visit('/#/ramp/labor/index');
+        cy.visit('/ramp/labor/index');
         cy.wait(10000);
         cy.get('body').then(($body) => {
             if ($body.find('.q-form > :nth-child(1)').length > 0) {
@@ -35,8 +35,10 @@ describe('Passenger labor work order', () => {
         cy.get('input[aria-label="*Flight number"]').clear().type('TEST-00');
         cy.get('input[aria-label="*Station"]').click();
         cy.get('[role="option"]').first().click();
-        cy.get('input[aria-label="Assigned to"]').clear().type('ima');
-        cy.get('[role="option"]').contains('Imagina Colombia').click();
+        cy.get('input[aria-label="Assigned to"]').type('ima');
+        cy.get('[role="option"]')
+            .contains('Imagina Colombia', { timeout: 10000 })
+            .click();
         cy.contains('button', 'Save').click();
 
         cy.contains('Error when looking for the').should('not.exist');

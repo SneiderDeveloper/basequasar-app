@@ -7,7 +7,7 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 describe('Ramp Schedule', () => {
     beforeEach(() => {
-        cy.visit('/#/ramp/schedule/index');
+        cy.visit('/ramp/schedule/index');
         cy.wait(10000);
         cy.get('body').then(($body) => {
             if ($body.find('.q-form > :nth-child(1)').length > 0) {
@@ -146,5 +146,141 @@ describe('Ramp Schedule', () => {
         cy.contains('button', 'Delete').should('be.visible');
         cy.contains('button', 'Delete').click();
         cy.contains('Record NOT deleted', { timeout: 10000 }).should('not.exist');
+    })
+
+    it('Testing the schedule filters', () => {
+        cy.get('#filter-button-crud').click();
+        cy.contains('Filters').should('be.visible');
+        cy.get('button').contains('Day').should('be.visible');
+        cy.get('.q-date__view').first().should('be.visible');
+        cy.get('[role="combobox"][aria-label="Filter by time"]').should('be.visible');
+        cy.get('label').contains('Customer').should('be.visible');
+        cy.get('label').contains('Carrier').should('be.visible');
+        cy.get('label').contains('Station').should('be.visible');
+        cy.get('label').contains('Status').should('be.visible');
+        cy.get('label').contains('Operation type').should('be.visible');
+        cy.get('label').contains('Flight Status').should('be.visible');
+        cy.get('label').contains('Ad Hoc').should('be.visible');
+        cy.get('button').contains('Search').should('be.visible');
+
+        cy.get('.q-drawer__content > div > i').click();
+        cy.contains('Filters').should('not.be.visible');
+    })
+
+    it('Testing the "Export" actions', () => {
+        cy.get('div:nth-child(6) > .q-btn').first().click();
+        cy.get('#innerLoadingMaster').should('not.be.visible');
+        cy.contains('New Report').should('be.visible', { timeout: 40000 });
+        cy.contains('Export Schedule with current').should('be.visible');
+        cy.get('label').contains('Format').should('be.visible');
+        cy.contains('Export | Schedule').should('be.visible');
+        cy.get('button').contains('Create').should('be.visible');
+        cy.contains('Last Report (csv)').should('be.visible');
+        cy.contains('Date:').should('be.visible');
+        cy.contains('Size:').should('be.visible');
+        cy.get('button').contains('Download').should('be.visible');
+        cy.get('#masterModalContent').find('button').first().click();
+
+        cy.get('#masterModalContent').should('not.exist');
+    })
+
+    it('Testing the "Scheduler" action', () => {
+        cy.get('button').contains('Scheduler').click();
+        cy.get('#titleCrudTable').should('be.visible');
+        cy.get('button').contains('Back to schedule').should('be.visible');
+        cy.get('button').contains('New').should('be.visible');
+        cy.get('#crudIndexViewAction').should('be.visible');
+        cy.get('#filter-button-crud').should('be.visible');
+        cy.get('#refresh-button-crud').should('be.visible');
+        cy.get('label').contains('Customer').should('be.visible');
+        cy.get('button').contains('Filters:').should('be.visible');
+    })
+
+    it('Testing create a Scheduler', () => {
+        cy.get('button').contains('Scheduler').click();
+        cy.get('button').contains('New').click();
+        cy.contains('New Scheduler').should('be.visible');
+        cy.get('label').contains('*Customer/Contract').click();
+        cy.get('[role="option"]').first().click();
+        cy.get('#masterModalContent div').contains('New Scheduler').first().click();
+        cy.get('label').contains('Airlines').click();
+        cy.get('[role="option"]').first().click();
+        cy.get('#masterModalContent div').contains('New Scheduler').first().click();
+        cy.get('label').contains('Station').click();
+        cy.get('[role="option"]').first().click();
+        cy.get('#masterModalContent div').contains('New Scheduler').first().click();
+        cy.get('label').contains('Aircraft types').click();
+        cy.get('[role="option"]').first().click();
+        cy.get('#masterModalContent div').contains('New Scheduler').first().click();
+        cy.get('label').contains('*Operation').click();
+        cy.get('[role="option"]').first().click();
+        cy.get('#masterModalContent div').contains('New Scheduler').first().click();
+
+        // Fechas usando Cypress
+        cy.get('label').contains('* From Date').click();
+        cy.get('input').filter(':visible').clear().type(moment().format('MM/DD/YYYY'));
+        cy.get('label').contains('* Until Date').click();
+        cy.get('input').filter(':visible').clear().type(moment().add(1, 'day').format('MM/DD/YYYY'));
+
+        cy.get('label').contains('Days Of Week').click();
+        cy.get('[role="option"]').contains('Friday').click();
+        cy.get('[role="option"]').contains('Monday').click();
+        cy.get('[role="option"]').contains('Saturday').click();
+        cy.get('#masterModalContent div').contains('New Scheduler').first().click();
+
+        cy.get('label').contains('*Flight number').click();
+        cy.get('input').filter(':visible').clear().type('TEST-02');
+        cy.get('label').contains('* Inbound Schedule Arrival').click();
+        cy.get('input').filter(':visible').clear().type(moment().format('HH:mm'));
+        cy.get('label').contains('*Outbound Flight Number').click();
+        cy.get('input').filter(':visible').clear().type('547');
+        cy.get('label').contains('*Outbound Schedule Departure').click();
+        cy.get('input').filter(':visible').clear().type(moment().add(1, 'hour').format('HH:mm'));
+        cy.get('label').contains('Dep. +Days').click();
+        cy.get('input').filter(':visible').clear().type('7');
+
+        cy.get('button').contains('Save').click();
+        cy.get('#masterModalContent #innerLoadingMaster circle').should('be.visible');
+        cy.get('#masterModalContent #innerLoadingMaster circle').should('not.be.visible');
+        cy.get('#masterModalContent div').contains('New Scheduler').first().should('not.be.visible');
+    })
+
+    it('Testing updating a scheduler', () => {
+        cy.get('button').contains('Scheduler').click();
+        cy.openModalFull()
+        cy.contains('Update scheduler Id:').should('be.visible');
+        cy.get('label').contains('Airlines').click();
+        cy.get('input').filter(':visible').clear().type('canada');
+        cy.get('[role="option"]').contains('Air Canada').click();
+        cy.get('#masterModalContent div').contains('Update scheduler Id:').first().click();
+        cy.get('label').contains('Aircraft types').click();
+        cy.get('input').filter(':visible').clear().type('74N');
+        cy.get('[role="option"]').contains('74N').click();
+        cy.get('#masterModalContent div').contains('Update scheduler Id:').first().click();
+        cy.get('label').contains('*Flight number').click();
+        cy.get('input').filter(':visible').clear().type('TEST-03');
+        cy.get('label').contains('* Inbound Schedule Arrival').click();
+        cy.get('input').filter(':visible').clear().type(Cypress.moment().add(20, 'minutes').format('HH:mm'));
+        cy.get('label').contains('*Outbound Flight Number').click();
+        cy.get('input').filter(':visible').clear().type('850');
+        cy.get('label').contains('*Outbound Schedule Departure').click();
+        cy.get('input').filter(':visible').clear().type(Cypress.moment().add(2, 'hour').format('HH:mm'));
+        cy.get('label').contains('Dep. +Days').click();
+        cy.get('input').filter(':visible').clear().type('8');
+        cy.get('button').contains('Save').click();
+        cy.get('#masterModalContent #innerLoadingMaster circle').should('be.visible');
+        cy.get('#masterModalContent #innerLoadingMaster circle').should('not.be.visible');
+        cy.get('#masterModalContent div').contains('Update scheduler Id:').first().should('not.be.visible');
+    })
+
+    it('Testing the removal of a Scheduler', () => {
+        cy.get('button').contains('Scheduler').click();
+        cy.get('tbody .q-tr.tw-bg-white').first().should('be.visible', { timeout: 60000 });
+
+        cy.get('tbody .q-tr.tw-bg-white').first().find('td').eq(0).invoke('text').then((id) => {
+            cy.get('tbody .q-tr.tw-bg-white').first().find('button').click();
+            cy.deleteWorkOrder();
+            cy.get('table').contains(id).should('not.be.visible', { timeout: 60000 });
+        });
     })
 })
