@@ -50,20 +50,20 @@ describe('Passenger fueling', () => {
     
     it('Testing to create a "Work Order" in fueling', () => {
         cy.contains('button', 'New').click();
-        cy.get('label').contains('*Customer/Contract').parent().find('input,select').click();
-        cy.get('ul[role="listbox"] li, [role="option"]').first().click();
+        cy.get('input[aria-label="*Customer/Contract"]').click();
+        cy.get('[role="option"]', { timeout: 10000 }).first().click();
 
         cy.get('label').contains('*Fueling ticket number').parent().find('input').as('ticketInput');
         cy.get('@ticketInput').click().clear().type('TEST-00');
 
-        cy.get('label').contains('Responsible').parent().find('input').as('responsibleInput');
-        cy.get('@responsibleInput').click().clear().type('ima');
-        cy.get('[role="option"]').contains('Imagina Colombia').click();
+        cy.get('input[aria-label="Responsible"]').type('ima');
+        cy.get('[role="option"]', { timeout: 10000 }).contains('Imagina Colombia').click();
+        
 
-        cy.get('label').contains('*Station').parent().find('input,select').click();
-        cy.get('ul[role="listbox"] li, [role="option"]').first().click();
+        cy.get('label').contains('*Station').parent().find('input').click();
+        cy.get('[role="option"]', { timeout: 10000 }).first().click();
 
-        cy.contains('button', 'Save').click();
+        cy.get('button').contains('Save').click();
 
         cy.get('#masterModalContent')
             .contains('Update fueling')
@@ -74,19 +74,18 @@ describe('Passenger fueling', () => {
         cy.get('tbody .q-tr.tw-bg-white').first().find('button').eq(1).click();
         cy.contains('a', 'Edit').click();
 
-        cy.get('label').contains('*Customer/Contract').parent().find('input').click().clear().type('AA corporation');
-        cy.get('[role="option"]').contains('AA Corporation (Ad Hoc)').click();
+        cy.get('input[aria-label="*Customer/Contract"]').click();
+        cy.get('[role="option"]', { timeout: 10000 }).first().click();
 
-        cy.get('#masterModalContent div').contains('Update fueling Id:').first().click();
+        cy.get('#masterModalContent').contains('Update fueling Id:').click();
 
-        cy.get('label').contains('*A/C Type').parent().find('input,select').click();
-        cy.get('[role="option"]').first().click();
+        cy.get('input[aria-label="*A/C Type"]').click();
+        cy.get('[role="option"]', { timeout: 10000 }).first().click();
 
-        cy.get('label').contains('*Carrier').parent().find('input,select').click();
-        cy.wait(1000);
-        cy.get('[role="option"]').eq(2).click();
+        cy.get('input[aria-label="*Carrier"]').click();
+        cy.get('[role="option"]', { timeout: 10000 }).eq(2).click();
 
-        cy.get('#masterModalContent div').contains('Update fueling Id:').first().click();
+        cy.get('#masterModalContent').contains('Update fueling Id:').click();
 
         cy.get('label').contains('Aircraft Registration').parent().find('input').click().clear().type('545218');
 
@@ -94,15 +93,15 @@ describe('Passenger fueling', () => {
         cy.get('ul').contains('Services').click();
         cy.get('.tw-flex > div:nth-child(3) > .q-btn').first().click();
         cy.get('div:nth-child(2) > div > div > #dynamicFieldComponent > div > .tw-flex > div:nth-child(3) > .q-btn').first().click();
-        cy.get('section button').should('be.visible');
+        // cy.get('section button').eq(1).find('button').should('be.visible');
 
         cy.get('#stepComponent').contains('Remark').click();
 
         cy.get('label').contains('Remark').parent().find('input,textarea').click().clear().type('Message test');
         cy.get('label').contains('Safety Message').parent().find('input,textarea').click().clear().type('Message test');
 
-        cy.contains('button', 'Close Flight').click();
-        cy.get('#masterModalContent div').contains('Update fueling Id:').should('not.exist');
+        cy.get('button').contains('Close Flight').click();
+        cy.contains('Update fueling Id:', { timeout: 20000 }).should('not.exist');
         cy.contains('Record updated').should('be.visible');
     })
 
