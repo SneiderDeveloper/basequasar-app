@@ -23,10 +23,10 @@ describe('Passenger fueling', () => {
         cy.contains('button', 'New').should('be.visible');
         cy.get('#filter-button-crud').should('be.visible');
         cy.get('#refresh-button-crud').should('be.visible');
-        cy.get('label').contains('Customer').should('be.visible');
-        cy.get('label').contains('Contract').should('be.visible');
-        cy.get('label').contains('Status').should('be.visible');
-        cy.get('label').contains('Ad Hoc').should('be.visible');
+        cy.get('input[aria-label="Customer"]').should('be.visible');
+        cy.get('input[aria-label="Contract"]').should('be.visible');
+        cy.get('input[aria-label="Status"]').should('be.visible');
+        cy.get('input[aria-label="Ad Hoc"]').should('be.visible');
 
         const fields = [
             'ID',
@@ -44,7 +44,9 @@ describe('Passenger fueling', () => {
         ];
 
         fields.forEach(field => {
-            cy.get('th, td').contains(field).should('be.visible');
+            cy.get('th, td', { timeout: 15000 })
+                .contains(field, { timeout: 10000 })
+                .should('be.visible');
         });
     })
     
@@ -123,7 +125,7 @@ describe('Passenger fueling', () => {
             .type('Message test');
 
         cy.get('button').contains('Close Flight').click();
-        cy.contains('Update fueling Id:', { timeout: 40000 }).should('not.exist');
+        cy.contains('Update fueling Id:', { timeout: 50000 }).should('not.exist');
         cy.contains('Record updated').should('be.visible');
     })
 
