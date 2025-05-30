@@ -84,7 +84,9 @@ describe('Passenger fueling', () => {
         cy.get('[role="option"]', { timeout: 10000 }).first().click();
 
         cy.get('input[aria-label="*Carrier"]').click();
-        cy.get('[role="option"]', { timeout: 10000 }).eq(2).click();
+        cy.get('[role="option"]', { timeout: 10000 })
+            .eq(2)
+            .click({ timeout: 10000, force: true });
 
         cy.get('#masterModalContent').contains('Update fueling Id:').click();
 

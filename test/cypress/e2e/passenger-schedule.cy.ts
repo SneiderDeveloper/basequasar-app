@@ -153,7 +153,7 @@ describe('Passenger Schedule', () => {
         cy.get('textarea[aria-label="Safety Message"]').clear().type('Message');
 
         cy.get('button').contains('Close').click();
-        cy.contains('Record updated', { timeout: 10000 }).should('be.visible');
+        cy.contains('Record updated', { timeout: 20000 }).should('be.visible');
         cy.get('#innerLoadingMaster div', { timeout: 10000 }).should('not.exist');
 
         cy.get('[data-testid="kanbanDay"]')

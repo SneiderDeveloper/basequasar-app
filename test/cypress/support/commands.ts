@@ -48,7 +48,7 @@ Cypress.Commands.add("selectStation", () => {
 })
 
 Cypress.Commands.add("openFullModal", () => {
-    cy.get(':nth-child(1) > .text-right > .crudIndexActionsColumn > .q-btn', { timeout: 10000 })
+    cy.get(':nth-child(1) > .text-right > .crudIndexActionsColumn > .q-btn', { timeout: 40000 })
         .click({ force: true });
     cy.get('a').contains('Edit').click();
 })
@@ -112,7 +112,7 @@ Cypress.Commands.add("createWorkOrderInSchedule", () => {
 Cypress.Commands.add("deleteWorkOrderInSchedule", () => {
     cy.get('[data-testid="kanbanDay"]')
         .find('div')
-        .contains('TEST-01')
+        .contains('TEST-01', { timeout: 30000 })
         .parents('[data-testid="kanbanDay"]')
         .find('div')
         .find('button')

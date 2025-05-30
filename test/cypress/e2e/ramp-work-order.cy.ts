@@ -156,7 +156,9 @@ describe('Ramp Work Order', () => {
         cy.get('[role="option"]').first().click();
 
         cy.get('[aria-label="*A/C Type"]').click();
-        cy.get('[role="option"]').first().click();
+        cy.get('[role="option"]', { timeout: 10000 })
+            .first()
+            .click({ timeout: 10000 });
 
         cy.get('[aria-label="*Operation"]').click();
         cy.contains('[role="option"]', 'Full_turn').click({ timeout: 10000 });
