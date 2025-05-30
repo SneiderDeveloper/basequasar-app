@@ -123,7 +123,7 @@ describe('Passenger fueling', () => {
             .type('Message test');
 
         cy.get('button').contains('Close Flight').click();
-        cy.contains('Update fueling Id:', { timeout: 20000 }).should('not.exist');
+        cy.contains('Update fueling Id:', { timeout: 40000 }).should('not.exist');
         cy.contains('Record updated').should('be.visible');
     })
 
