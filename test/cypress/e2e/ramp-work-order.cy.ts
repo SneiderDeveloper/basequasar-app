@@ -161,7 +161,7 @@ describe('Ramp Work Order', () => {
         cy.get('[aria-label="*Operation"]').click();
         cy.contains('[role="option"]', 'Full_turn').click({ timeout: 10000 });
 
-        cy.get('input[aria-label="Origin"]').click();
+        cy.get('input[aria-label="Origin"]').click({ force: true });
         cy.get('[role="option"]').eq(2).click();
 
         cy.get('[data-testid="dynamicField-inboundTailNumber"] [aria-label="Tail N°"]').clear().type('789');

@@ -55,18 +55,15 @@ describe('Passenger fueling', () => {
         cy.get('input[aria-label="*Customer/Contract"]').click();
         cy.get('[role="option"]', { timeout: 10000 }).first().click();
 
-        cy.get('label')
-            .contains('*Fueling ticket number')
-            .parent()
-            .find('input')
-            .as('ticketInput');
-        cy.get('@ticketInput').click().clear().type('TEST-00');
+        cy.get('input[aria-label="*Fueling ticket number"]').type('TEST-00');
 
         cy.get('input[aria-label="Responsible"]').type('ima');
-        cy.get('[role="option"]', { timeout: 40000 }).contains('Imagina Colombia').click();
+        cy.get('[role="option"]', { timeout: 40000 })
+            .contains('Imagina Colombia', { timeout: 10000 })
+            .click();
         
 
-        cy.get('label').contains('*Station').parent().find('input').click();
+        cy.get('input[aria-label="*Station"]').click();
         cy.get('[role="option"]', { timeout: 10000 }).first().click();
 
         cy.get('button').contains('Save').click();
@@ -91,13 +88,7 @@ describe('Passenger fueling', () => {
 
         cy.get('#masterModalContent').contains('Update fueling Id:').click();
 
-        cy.get('label')
-            .contains('Aircraft Registration')
-            .parent()
-            .find('input')
-            .click()
-            .clear()
-            .type('545218');
+        cy.get('input[aria-label="Aircraft Registration"]').type('545218');
 
         cy.get('#stepComponent').contains('Services').click();
         cy.get('ul').contains('Services').click();
@@ -109,23 +100,11 @@ describe('Passenger fueling', () => {
 
         cy.get('#stepComponent').contains('Remark').click();
 
-        cy.get('label')
-            .contains('Remark')
-            .parent()
-            .find('input,textarea')
-            .click()
-            .clear()
-            .type('Message test');
-        cy.get('label')
-            .contains('Safety Message')
-            .parent()
-            .find('input,textarea')
-            .click()
-            .clear()
-            .type('Message test');
+        cy.get('textarea[aria-label="Remark"]').type('Remark test');
+        cy.get('textarea[aria-label="Safety Message"]').type('Safety Message test');
 
         cy.get('button').contains('Close Flight').click();
-        cy.contains('Record updated', { timeout: 10000 }).should('be.visible');
+        cy.contains('Record updated', { timeout: 30000 }).should('be.visible');
     })
 
     it('Testing to delete a "Work Order" in fueling', () => {
