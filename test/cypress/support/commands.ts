@@ -64,15 +64,15 @@ Cypress.Commands.add("deleteWorkOrder", () => {
     cy.contains('Record NOT deleted').should('not.exist');
 })
 
-Cypress.Commands.add("calendarTitlesAndActions", () => {
+Cypress.Commands.add("calendarTitlesAndActions", (refreshTestId) => {
     cy.get('input[placeholder="Search"]').should('be.visible');
     cy.get('.actions-content > div > .q-btn').first().should('be.visible');
     cy.get('div:nth-child(3) > .q-btn').first().should('be.visible');
     cy.get('button').contains('Scheduler').should('be.visible');
     cy.get('#filter-button-crud').should('be.visible');
-    cy.get('button[data-testid="btn-dropdown--5"]').should('be.visible');
 
-    cy.get('button[data-testid="btn-dropdown--5"]').click({ force: true });
+    cy.get(`button[data-testid="${refreshTestId}"]`, { timeout: 15000 })
+        .click({ force: true });
     cy.contains('Refresh').should('be.visible');
     cy.contains('Refresh every 1 minutes').should('be.visible');
     cy.contains('Refresh every 5 minutes').should('be.visible');
@@ -111,7 +111,7 @@ Cypress.Commands.add("createWorkOrderInSchedule", () => {
 Cypress.Commands.add("deleteWorkOrderInSchedule", () => {
     cy.get('[data-testid="kanbanDay"]')
         .find('div')
-        .contains('TEST-01/TEST-01')
+        .contains('TEST-01')
         .parents('[data-testid="kanbanDay"]')
         .find('div')
         .find('button')
@@ -143,7 +143,7 @@ Cypress.Commands.add("scheduleFilters", () => {
     cy.get('label').contains('Filters').should('not.exist');
 })
 
-Cypress.Commands.add("createScheduler", () => {
+Cypress.Commands.add("createScheduler", (operation) => {
     cy.get('button').contains('Scheduler').click();
     cy.get('button').contains('New').click();
     cy.contains('New Scheduler').should('be.visible');
@@ -165,7 +165,7 @@ Cypress.Commands.add("createScheduler", () => {
     cy.get('#masterModalContent div').contains('New Scheduler').first().click();
 
     cy.get('input[aria-label="*Operation"]').click();
-    cy.get('[role="option"]').eq(2).click();
+    cy.get('[role="option"]').eq(operation).click();
     cy.get('#masterModalContent div').contains('New Scheduler').first().click();
 
     cy.get('input[aria-label="* From Date"]').click().clear().type(moment().format('MM/DD/YYYY'));

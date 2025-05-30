@@ -19,7 +19,7 @@ describe('Ramp Schedule', () => {
     });
 
     it('Testing the integrity of the station selection modal', () => {
-        cy.get('#masterModalContent').should('be.visible', { timeout: 20000 });
+        cy.get('#masterModalContent', { timeout: 10000 } ).should('be.visible');
 
         cy.selectStation();
 
@@ -30,17 +30,17 @@ describe('Ramp Schedule', () => {
     // it('Testing that the modal requesting the station is triggered correctly', () => {
     //     cy.get('button').contains('Scheduler').click();
     //     cy.get('button').contains('Back to schedule').click();
-    //     cy.contains('Filter schedule').should('not.be.visible');
+    //     cy.contains('Filter schedule').should('not.exist');
 
     //     cy.get('[aria-label="Collapse \\"Ramp\\""]').click();
     //     cy.get('[aria-label="Expand \\"Ramp\\""]').click();
     //     cy.get('#menuItem-qrampadminworkOrders').click();
     //     cy.get('#menuItem-qrampadminschedule').click();
-    //     cy.contains('Filter schedule').should('not.be.visible');
+    //     cy.contains('Filter schedule').should('not.exist');
 
     //     cy.get('#menuItem-qrampadminpassengerOperationTypes').click();
     //     cy.get('#menuItem-qrampadminschedule').click();
-    //     cy.contains('Filter schedule').should('not.be.visible');
+    //     cy.contains('Filter schedule').should('not.exist');
 
     //     cy.get('[aria-label="Expand \\"Passenger\\""]').click();
     //     cy.get('#menuItem-qrampadminpassengerSchedule').click();
@@ -56,7 +56,7 @@ describe('Ramp Schedule', () => {
     // })
 
     it('Testing the visibility of actions and titles in the "schedule"', () => {
-        cy.calendarTitlesAndActions();
+        cy.calendarTitlesAndActions('btn-dropdown--5');
     })
 
     it('Testing to create a "Work Order" in Schedule', () => {
@@ -73,14 +73,14 @@ describe('Ramp Schedule', () => {
             .find('input')
             .clear()
             .type('TEST-01');
-        cy.get('[data-testid="dynamicField-operationTypeId"]').find('input').click();
-        cy.get('[aria-label="*Operation"]').clear().type('Half_turn_Inbound');
-        cy.contains('[role="option"]', 'Half_turn_Inbound').click();
+        cy.get('[aria-label="*Operation"]').click();
+        cy.contains('[role="option"]', 'Half_turn_Inbound', { timeout: 10000 })
+            .click({ timeout: 10000 });
 
         cy.get('input[aria-label="Flight Status"]').click();
-        cy.contains('[role="option"]', 'Scheduled').click();
+        cy.contains('[role="option"]', 'Scheduled').click({ timeout: 10000 });
         cy.get('input[aria-label="Aircraft types"]').click();
-        cy.get('[role="option"]').first().click();
+        cy.get('[role="option"]').first().click({ timeout: 10000 });
 
         cy.get('.tw-border > .tw-space-x-2').find('button').eq(0).click();
         cy.contains('TEST-01').should('be.visible', { timeout: 15000 });
@@ -95,8 +95,8 @@ describe('Ramp Schedule', () => {
     })
 
     it('Testing the "Export" actions', () => {
-        cy.get('div:nth-child(6) > .q-btn').first().click();
-        cy.get('#innerLoadingMaster').should('not.be.visible');
+        cy.get('div:nth-child(5) > .q-btn').first().click();
+        cy.get('#innerLoadingMaster').should('not.exist');
         cy.contains('New Report').should('be.visible', { timeout: 40000 });
         cy.contains('Export Schedule with current').should('be.visible');
         cy.get('label').contains('Format').should('be.visible');
@@ -124,7 +124,7 @@ describe('Ramp Schedule', () => {
     })
 
     it('Testing create a Scheduler', () => {
-        cy.createScheduler();
+        cy.createScheduler(0);
     })
 
     it('Testing updating a scheduler', () => {

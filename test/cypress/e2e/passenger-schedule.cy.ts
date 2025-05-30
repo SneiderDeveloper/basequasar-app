@@ -52,7 +52,7 @@ describe('Passenger Schedule', () => {
     // })
 
     it('Testing the visibility of actions and titles in the "schedule"', () => {
-        cy.calendarTitlesAndActions();
+        cy.calendarTitlesAndActions('btn-dropdown--4');
     })
 
     it('Testing changes from day to week and from week to day', () => {
@@ -184,7 +184,7 @@ describe('Passenger Schedule', () => {
     })
 
     it('Testing create a Scheduler', () => {
-        cy.createScheduler();
+        cy.createScheduler(2);
     })
 
     it('Testing updating a scheduler', () => {
