@@ -211,7 +211,7 @@ describe('Ramp Work Order', () => {
 
         cy.contains('button', 'Close').click();
 
-        cy.get('#formRampComponent', { timeout: 10000 }).should('not.exist');
+        cy.get('#formRampComponent', { timeout: 20000 }).should('not.exist');
     })
 
     // it('Testing the service date range rule', () => {

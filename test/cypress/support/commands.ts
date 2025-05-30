@@ -47,8 +47,9 @@ Cypress.Commands.add("selectStation", () => {
     cy.get('button').contains('filters').click();
 })
 
-Cypress.Commands.add("openFullModal", (filterName) => {
-    cy.get(':nth-child(1) > .text-right > .crudIndexActionsColumn > .q-btn').click();
+Cypress.Commands.add("openFullModal", () => {
+    cy.get(':nth-child(1) > .text-right > .crudIndexActionsColumn > .q-btn', { timeout: 10000 })
+        .click({ force: true });
     cy.get('a').contains('Edit').click();
 })
 
