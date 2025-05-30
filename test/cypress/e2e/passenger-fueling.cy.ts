@@ -17,36 +17,36 @@ describe('Passenger fueling', () => {
         });
     });
 
-    // it('Testing visibility of quickFilter type actions and filters', () => {
-    //     cy.contains('Fueling New', { timeout: 15000 }).should('be.visible');
-    //     cy.get('input[placeholder="Search"]').should('be.visible');
-    //     cy.contains('button', 'New').should('be.visible');
-    //     cy.get('#filter-button-crud').should('be.visible');
-    //     cy.get('#refresh-button-crud').should('be.visible');
-    //     cy.get('label').contains('Customer').should('be.visible');
-    //     cy.get('label').contains('Contract').should('be.visible');
-    //     cy.get('label').contains('Status').should('be.visible');
-    //     cy.get('label').contains('Ad Hoc').should('be.visible');
+    it('Testing visibility of quickFilter type actions and filters', () => {
+        cy.contains('Fueling New', { timeout: 15000 }).should('be.visible');
+        cy.get('input[placeholder="Search"]').should('be.visible');
+        cy.contains('button', 'New').should('be.visible');
+        cy.get('#filter-button-crud').should('be.visible');
+        cy.get('#refresh-button-crud').should('be.visible');
+        cy.get('label').contains('Customer').should('be.visible');
+        cy.get('label').contains('Contract').should('be.visible');
+        cy.get('label').contains('Status').should('be.visible');
+        cy.get('label').contains('Ad Hoc').should('be.visible');
 
-    //     const fields = [
-    //         'ID',
-    //         'Customer',
-    //         'Contracts',
-    //         'Ticket Number',
-    //         'Registration Number',
-    //         'Status',
-    //         'Station',
-    //         'Responsible',
-    //         'Service date',
-    //         'Created At',
-    //         'Updated At',
-    //         'Actions'
-    //     ];
+        const fields = [
+            'ID',
+            'Customer',
+            'Contracts',
+            'Ticket Number',
+            'Registration Number',
+            'Status',
+            'Station',
+            'Responsible',
+            'Service date',
+            'Created At',
+            'Updated At',
+            'Actions'
+        ];
 
-    //     fields.forEach(field => {
-    //         cy.get('th, td').contains(field).should('be.visible');
-    //     });
-    // })
+        fields.forEach(field => {
+            cy.get('th, td').contains(field).should('be.visible');
+        });
+    })
     
     it('Testing to create a "Work Order" in fueling', () => {
         cy.contains('button', 'New').click();
