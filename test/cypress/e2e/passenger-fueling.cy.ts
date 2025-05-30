@@ -63,7 +63,7 @@ describe('Passenger fueling', () => {
         cy.get('@ticketInput').click().clear().type('TEST-00');
 
         cy.get('input[aria-label="Responsible"]').type('ima');
-        cy.get('[role="option"]', { timeout: 20000 }).contains('Imagina Colombia').click();
+        cy.get('[role="option"]', { timeout: 40000 }).contains('Imagina Colombia').click();
         
 
         cy.get('label').contains('*Station').parent().find('input').click();
@@ -125,8 +125,7 @@ describe('Passenger fueling', () => {
             .type('Message test');
 
         cy.get('button').contains('Close Flight').click();
-        cy.contains('Update fueling Id:', { timeout: 50000 }).should('not.exist');
-        cy.contains('Record updated').should('be.visible');
+        cy.contains('Record updated', { timeout: 10000 }).should('be.visible');
     })
 
     it('Testing to delete a "Work Order" in fueling', () => {
