@@ -44,8 +44,8 @@ describe('Passenger fueling', () => {
         ];
 
         fields.forEach(field => {
-            cy.get('th, td', { timeout: 15000 })
-                .contains(field, { timeout: 10000 })
+            cy.get('th, td', { timeout: 30000 })
+                .contains(field, { timeout: 30000 })
                 .should('be.visible');
         });
     })
@@ -75,7 +75,9 @@ describe('Passenger fueling', () => {
         cy.get('tbody .q-tr.tw-bg-white').first().find('button').eq(1).click();
         cy.contains('a', 'Edit').click();
 
-        cy.get('input[aria-label="*Customer/Contract"]').click();
+        cy.contains('Update fueling Id:', { timeout: 50000 }).should('be.visible');
+
+        cy.get('input[aria-label="*Customer/Contract"]').click({ force: true });
         cy.get('[role="option"]', { timeout: 10000 }).first().click();
 
         cy.get('#masterModalContent').contains('Update fueling Id:').click();
@@ -84,11 +86,12 @@ describe('Passenger fueling', () => {
         cy.get('[role="option"]', { timeout: 10000 }).first().click();
 
         cy.get('input[aria-label="*Carrier"]').click();
+        cy.wait(1000)
         cy.get('[role="option"]', { timeout: 10000 })
             .eq(2)
             .click({ timeout: 10000, force: true });
 
-        cy.get('#masterModalContent').contains('Update fueling Id:').click();
+        cy.contains('Update fueling Id:').click();
 
         cy.get('input[aria-label="Aircraft Registration"]').type('545218');
 

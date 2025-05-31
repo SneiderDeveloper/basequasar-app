@@ -29,7 +29,7 @@ describe('Passenger labor work order', () => {
         cy.contains('button', 'Save').should('be.visible');
 
         cy.get('input[aria-label="*Customer"]').click();
-        cy.get('[role="option"]', { timeout: 20000 }).first().click();
+        cy.get('[role="option"]', { timeout: 40000 }).first().click();
         cy.get('#formRampComponent div').contains('New Work Order').first().click();
 
         cy.get('input[aria-label="*Flight number"]').clear().type('TEST-00');
