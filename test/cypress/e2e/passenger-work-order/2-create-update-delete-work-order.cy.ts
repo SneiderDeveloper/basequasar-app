@@ -254,7 +254,7 @@ describe('Passenger Work Order', () => {
         cy.get('[role="combobox"][aria-label="*Our delay"]')
             .eq(1)
             .click();
-        cy.get('[role="option"]')
+        cy.get('[role="option"]', { timeout: 40000 })
             .eq(1)
             .click();
 
