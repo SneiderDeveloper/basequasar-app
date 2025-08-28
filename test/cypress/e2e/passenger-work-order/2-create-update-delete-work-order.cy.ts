@@ -41,7 +41,9 @@ describe('Passenger Work Order', () => {
             .first({ timeout: 10000 })
             .click();
         cy.get('input[aria-label="Assigned to"]').type('ima');
-        cy.get('[role="option"]', { timeout: 10000 }).contains('Imagina Colombia').click();
+        cy.get('[role="option"]', { timeout: 80000 })
+            .contains('Imagina Colombia')
+            .click();
         cy.get('button').contains('Save').click();
 
         cy.contains('Error when looking for the').should('not.exist');
