@@ -29,22 +29,24 @@ describe('Passenger Schedule', () => {
         cy.get('button').contains('Back to schedule').click();
         cy.contains('Filter schedule').should('not.exist');
 
-        cy.wait(7000);
+        // Wait for the page to be ready before browsing
+        cy.get('button').contains('Scheduler', { timeout: 70000 }).should('be.visible');
 
         cy.visit('/passenger/operation-types/index');
-        cy.wait(4000);
+        cy.url().should('include', '/passenger/operation-types/index');
+        
         cy.visit('/passenger/work-orders/index');
-        cy.wait(4000);
+        cy.url().should('include', '/passenger/work-orders/index');
         
         cy.visit('/passenger/schedule/index');
-        cy.wait(4000);
-        cy.contains('Filter schedule').should('not.exist');
+        cy.url().should('include', '/passenger/schedule/index');
+        cy.contains('Filter schedule', { timeout: 20000 }).should('not.exist');
         
         cy.visit('/passenger/operation-types/index');
-        cy.wait(4000);
+        cy.url().should('include', '/passenger/operation-types/index');
 
         cy.visit('/passenger/schedule/index');
-        cy.wait(4000);
+        cy.url().should('include', '/passenger/schedule/index');
         cy.contains('Filter schedule').should('not.exist');
         
         cy.visit('/ramp/schedule/index');
