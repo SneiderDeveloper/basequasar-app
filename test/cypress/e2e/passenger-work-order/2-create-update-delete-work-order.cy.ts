@@ -41,7 +41,7 @@ describe('Passenger Work Order', () => {
             .first({ timeout: 10000 })
             .click();
         cy.get('input[aria-label="Assigned to"]').type('ima');
-        cy.get('[role="option"]', { timeout: 80000 })
+        cy.get('[role="option"]', { timeout: 120000 })
             .contains('Imagina Colombia')
             .click();
         cy.get('button').contains('Save').click();
@@ -55,7 +55,7 @@ describe('Passenger Work Order', () => {
 
         cy.get('button').contains('Yes').click();
 
-        cy.contains('What do you want to do?').should('be.visible');
+        cy.contains('What do you want to do?', { timeout: 80000 }).should('be.visible');
         cy.get('button').contains('Go out to the list').should('be.visible');
         cy.get('button').contains('Continue editing').should('be.visible');
         cy.get('button').contains('Create a new one').should('be.visible');

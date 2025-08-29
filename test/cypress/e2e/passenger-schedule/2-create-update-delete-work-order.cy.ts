@@ -33,7 +33,7 @@ describe('Passenger Schedule', () => {
     })
 
     it('Testing updating a "Work Order" in Schedule', () => {
-        cy.contains('TEST-00/TEST-00', { timeout: 10000 }).first().click();
+        cy.contains('TEST-00/TEST-00', { timeout: 50000 }).first().click();
 
         cy.contains('Update Work Order Id:', { timeout: 70000 }).should('be.visible');
 

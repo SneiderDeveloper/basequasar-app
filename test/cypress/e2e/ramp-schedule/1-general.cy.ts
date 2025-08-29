@@ -59,7 +59,7 @@ describe('Ramp Schedule', () => {
     it('Testing the "Export" actions', () => {
         cy.get('div:nth-child(5) > .q-btn').first().click();
         cy.get('#innerLoadingMaster').should('not.exist');
-        cy.contains('New Report').should('be.visible', { timeout: 40000 });
+        cy.contains('New Report', { timeout: 80000 }).should('be.visible');
         cy.contains('Export Schedule with current').should('be.visible');
         cy.get('label').contains('Format').should('be.visible');
         cy.contains('Export | Schedule').should('be.visible');

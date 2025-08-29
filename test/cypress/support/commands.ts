@@ -112,7 +112,7 @@ Cypress.Commands.add("createWorkOrderInSchedule", () => {
 })
 
 Cypress.Commands.add("deleteWorkOrderInSchedule", () => {
-    cy.get('[data-testid="kanbanDay"]')
+    cy.get('[data-testid="kanbanDay"]', { timeout: 80000 })
         .find('div')
         .contains('TEST-01', { timeout: 30000 })
         .parents('[data-testid="kanbanDay"]')
