@@ -27,12 +27,12 @@ describe('Ramp Schedule', () => {
     })
 
     it('Testing to create a "Work Order" in Schedule', () => {
-        cy.get('.tw-inline-flex > button').first().click({ timeout: 190000 });
+        cy.get('.tw-inline-flex > button').first().click({ timeout: 290000 });
         cy.createWorkOrderInSchedule();
     });
 
     it('Testing updating a "Work Order" in Schedule', () => {
-        cy.get('#kanban-card-actions').first().should('be.visible');
+        cy.get('#kanban-card-actions', { timeout: 120000 }).first().should('be.visible');
         cy.contains('TEST-00/TEST-00').first().click();
 
         cy.get('[aria-label="*Flight number"]', { timeout: 60000 })

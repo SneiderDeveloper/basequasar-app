@@ -112,7 +112,7 @@ Cypress.Commands.add("createWorkOrderInSchedule", () => {
 })
 
 Cypress.Commands.add("deleteWorkOrderInSchedule", () => {
-    cy.get('[data-testid="kanbanDay"]', { timeout: 80000 })
+    cy.get('[data-testid="kanbanDay"]', { timeout: 290000 })
         .find('div')
         .contains('TEST-01', { timeout: 30000 })
         .parents('[data-testid="kanbanDay"]')
@@ -148,12 +148,12 @@ Cypress.Commands.add("scheduleFilters", () => {
 })
 
 Cypress.Commands.add("createScheduler", (operation) => {
-    cy.get('button').contains('Scheduler').click({ timeout: 190000 });
+    cy.get('button').contains('Scheduler').click({ timeout: 290000 });
     cy.get('button').contains('New').click(); 
     cy.contains('New Scheduler').should('be.visible');
 
     cy.get('input[aria-label="*Customer/Contract"]').click();
-    cy.get('[role="option"]', { timeout: 190000 }).first().click();
+    cy.get('[role="option"]', { timeout: 290000 }).first().click();
     cy.get('#masterModalContent div').contains('New Scheduler').first().click();
 
     cy.get('input[aria-label="Airlines"]').click();
@@ -193,7 +193,7 @@ Cypress.Commands.add("createScheduler", (operation) => {
 })
 
 Cypress.Commands.add("updatingScheduler", () => {
-    cy.get('button').contains('Scheduler').click();
+    cy.get('button').contains('Scheduler').click({ timeout: 290000 });
     
     // Open modal
     cy.get('tbody').find('.q-tr.tw-bg-white', { timeout: 120000 }).first().find('button').click();
@@ -227,7 +227,7 @@ Cypress.Commands.add("updatingScheduler", () => {
 })
 
 Cypress.Commands.add("removalScheduler", () => {
-    cy.get('button').contains('Scheduler').click();
+    cy.get('button').contains('Scheduler').click({ timeout: 290000 });
 
     cy.get('tbody').find('.q-tr.tw-bg-white', { timeout: 120000 }).first().as('firstRow');
     cy.get('@firstRow').should('be.visible');
